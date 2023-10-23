@@ -1,6 +1,6 @@
 {
-    "name": "pestphp/pest-plugin-template",
-    "description": "My awesome plugin",
+    "name": "pestphp/pest-plugin-stressless",
+    "description": "Stressless plugin for Pest",
     "keywords": [
         "php",
         "framework",
@@ -12,20 +12,27 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.1",
-        "pestphp/pest": "^2.5",
-        "pestphp/pest-plugin": "^2.0.1"
+        "php": "^8.2",
+        "pestphp/pest": "@dev",
+        "pestphp/pest-plugin": "^2.1.1",
+        "ext-curl": "*"
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../pest"
+        }
+    ],
     "autoload": {
         "psr-4": {
-            "Pest\\PluginName\\": "src/"
+            "Pest\\Stressless\\": "src/"
         },
         "files": [
             "src/Autoload.php"
         ]
     },
     "require-dev": {
-        "pestphp/pest-dev-tools": "^2.9"
+        "pestphp/pest-dev-tools": "^2.16"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
