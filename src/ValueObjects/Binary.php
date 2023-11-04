@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pest\Stressless;
+namespace Pest\Stressless\ValueObjects;
 
 use RuntimeException;
 use Stringable;
@@ -39,7 +39,7 @@ final readonly class Binary implements Stringable
             default => throw new RuntimeException('Unsupported OS.'),
         };
 
-        return new self((string) realpath(__DIR__.'/../bin/'.$path));
+        return new self((string) realpath(__DIR__.'/../../bin/'.$path));
     }
 
     /**

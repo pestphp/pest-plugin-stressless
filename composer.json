@@ -13,16 +13,10 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "pestphp/pest": "@dev",
+        "pestphp/pest": "^2.24.1",
         "pestphp/pest-plugin": "^2.1.1",
         "ext-curl": "*"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../pest"
-        }
-    ],
     "autoload": {
         "psr-4": {
             "Pest\\Stressless\\": "src/"

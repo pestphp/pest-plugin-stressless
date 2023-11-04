@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Pest\Stressless;
 
 use Pest\Stressless\Fluent\WithOptions;
+use Pest\Stressless\ValueObjects\Result;
+use Pest\Stressless\ValueObjects\Url;
 
 /**
  * @internal
@@ -13,6 +15,11 @@ use Pest\Stressless\Fluent\WithOptions;
  */
 final class Factory
 {
+    /**
+     * Weather or not the run should be verbose.
+     */
+    private bool $verbose = false;
+
     /**
      * The computed result, if any.
      */
@@ -70,7 +77,43 @@ final class Factory
      */
     public function run(): Result
     {
-        return $this->result = (new Run($this->url, $this->options))->start();
+        return $this->result = (new Run(
+            new Url($this->url),
+            $this->options,
+            $this->verbose,
+        ))->start();
+    }
+
+    /**
+     * Specifies that the run should be verbose, and then exits.
+     */
+    public function dd(): never
+    {
+        $this->dump();
+
+        exit(1);
+    }
+
+    /**
+     * Specifies that the run should be verbose.
+     */
+    public function dump(): self
+    {
+        $this->verbosely();
+
+        $this->run();
+
+        return $this;
+    }
+
+    /**
+     * Specifies that the run should be verbose.
+     */
+    public function verbosely(): self
+    {
+        $this->verbose = true;
+
+        return $this;
     }
 
     /**
@@ -80,7 +123,7 @@ final class Factory
      */
     public function __call(string $name, array $arguments): mixed
     {
-        if (! $this->result instanceof \Pest\Stressless\Result) {
+        if (! $this->result instanceof Result) {
             $this->run();
         }
 

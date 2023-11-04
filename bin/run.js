@@ -8,6 +8,6 @@ export default () => {
 
 export function handleSummary(data) {
     return {
-        'summary.json': JSON.stringify(data),
+        [__ENV.PEST_STRESS_TEST_SUMMARY_PATH]: JSON.stringify(data),
     };
 }
