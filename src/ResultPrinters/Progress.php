@@ -29,14 +29,16 @@ final readonly class Progress
      */
     public function tail(): void
     {
-        $date = date('H:i:s');
         $domain = $this->url->domain();
 
+        $concurrentRequests = $this->session->concurrentRequests();
+        $duration = $this->session->duration();
+
         render(<<<HTML
-            <div class="flex mx-2">
-                <span class="text-gray">$date</span>
-                <span class="flex-1"></span>
-                <span class="text-gray">Stress testing <span class="text-blue">$domain</span></span>
+            <div class="flex mx-2 max-w-150">
+                <span class="text-gray">Stress testing <span class="text-cyan font-bold">$domain</span></span>
+                <span class="flex-1 ml-1 content-repeat-[―] text-gray"></span>
+                <span class="text-gray ml-1">{$concurrentRequests} concurrent requests for {$duration} seconds</span>
             </div>
         HTML);
 
@@ -69,7 +71,7 @@ final readonly class Progress
             foreach ($lines as $line) {
                 if (str_starts_with($line, '{"metric":"http_req_duration","type":"Point"')) {
                     /** @var array{data: array{time: string, value: float}}|null $point */
-                    $point = json_decode($line, true);
+                    $point = json_decode($line, true, 512, JSON_THROW_ON_ERROR);
 
                     if (is_array($point)) {
                         $currentTime = substr($point['data']['time'], 0, 19);
@@ -115,13 +117,13 @@ final readonly class Progress
 
             $greenDots = (int) (($average * $width) / $maxResponseTime);
 
-            $greenDots = str_repeat('█', $greenDots);
+            $greenDots = str_repeat('▉', $greenDots);
 
             render(<<<HTML
-                <div class="flex mx-2">
+                <div class="flex mx-2 max-w-150">
                     <span class="text-gray">
-                        <span>{$time}│</span>
-                        <span class="">$greenDots</span>
+                        <span>{$time}</span>
+                        <span class="ml-1 text-gray">$greenDots</span>
                     </span>
                     <span class="flex-1"></span>
                     <span class="text-gray ml-1">{$average}ms</span>

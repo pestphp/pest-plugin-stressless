@@ -17,6 +17,8 @@ final readonly class Session
     public function __construct(
         private string $basePath,
         private string $id,
+        private int $concurrentRequests,
+        private int $duration,
     ) {
         //
     }
@@ -48,6 +50,22 @@ final readonly class Session
         if (file_exists($this->summaryPath())) {
             unlink($this->summaryPath());
         }
+    }
+
+    /**
+     * Gets the number of concurrent requests.
+     */
+    public function concurrentRequests(): int
+    {
+        return $this->concurrentRequests;
+    }
+
+    /**
+     * Gets the duration of the run.
+     */
+    public function duration(): int
+    {
+        return $this->duration;
     }
 
     /**

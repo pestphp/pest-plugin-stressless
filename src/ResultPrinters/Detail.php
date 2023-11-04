@@ -18,6 +18,13 @@ final readonly class Detail
      */
     public function print(Result $result): void
     {
+        render(<<<'HTML'
+            <div class="flex mx-2 max-w-150">
+                <span class="text-gray">Result</span>
+                <span class="flex-1 ml-1 content-repeat-[―] text-gray"></span>
+            </div>
+        HTML);
+
         /**
          * data_received..................: 22 kB 5.7 kB/s
          * data_sent......................: 742 B 198 B/s
@@ -41,6 +48,23 @@ final readonly class Detail
         $this->overview($result, $metrics);
         $this->server($metrics);
         $this->network($metrics);
+
+        render(<<<'HTML'
+            <div class="mx-2 max-w-150 text-right flex text-gray">
+                <span></span>
+                <span class="flex-1"></span>
+                <span>
+                    <span class="text-red">■</span>
+                    <span class="mx-1">Critical</span>
+                    <span class="text-orange ml-1">■</span>
+                    <span class="mx-1">Poor</span>
+                    <span class="text-yellow ml-1">■</span>
+                    <span class="mx-1">Ok</span>
+                    <span class="text-green ml-1">■</span>
+                    <span class="ml-1">Excellent</span>
+                </span>
+            </div>);
+        HTML);
     }
 
     /**
@@ -48,21 +72,6 @@ final readonly class Detail
      */
     private function overview(Result $result, array $metrics): void
     {
-        render(<<<'HTML'
-            <div class="flex mx-2 max-w-150"">
-                <span class="font-bold"></span>
-                <span class="flex-1"></span>
-                <span class="text-gray">
-                    <span class="text-red">■</span>
-                    <span class="ml-1"></span>
-                    <span class="text-yellow ml-2">■</span>
-                    <span class="ml-1">50-89</span>
-                    <span class="text-green ml-2">■</span>
-                    <span class="ml-1">90-100</span>
-                </span>
-            </div>);
-        HTML);
-
         $testRunDuration = $result->testRunDuration();
         $testRunDuration = sprintf('%4.2f', $testRunDuration / 1000);
 
@@ -70,10 +79,10 @@ final readonly class Detail
 
         $requestsTotal = $metrics['http_reqs']['values']['count'];
         $requestsRate = round($metrics['http_reqs']['values']['rate'], 2);
-        $testRunConcurrentUsers = $result->testRunConcurrentUsers();
+        $result->testRunConcurrentUsers();
 
         $this->twoColumnDetail('Total Requests', <<<HTML
-            <span class="text-gray mr-1">$requestsRate reqs/second │ $testRunConcurrentUsers concurrent users</span>
+            <span class="text-gray mr-1">$requestsRate reqs/second</span>
             <span>$requestsTotal requests</span>
         HTML);
 
@@ -92,15 +101,17 @@ final readonly class Detail
             + $metrics['http_req_duration']['values']['avg'];
 
         $responseDurationColor = match (true) {
-            $responseDuration < 200 => 'green',
-            $responseDuration < 400 => 'yellow',
-            default => 'red',
+            $responseDuration === 0.0 => '',
+            $responseDuration < 200.0 => 'text-green',
+            $responseDuration < 400.0 => 'text-yellow',
+            $responseDuration < 800.0 => 'text-orange',
+            default => 'text-red',
         };
 
         $responseDuration = sprintf('%4.2f', $responseDuration);
 
         $this->twoColumnDetail('Response Duration', <<<HTML
-            <span class="text-$responseDurationColor font-bold">$responseDuration ms</span>
+            <span class="$responseDurationColor font-bold">$responseDuration ms</span>
         HTML);
     }
 
@@ -119,18 +130,20 @@ final readonly class Detail
             - $metrics['http_req_waiting']['values']['avg'];
         $responseNetworkDurationPercentage = $responseDuration > 0.00 ? round($responseNetworkDuration * 100 / $responseDuration, 2) : 0.00;
         $responseNetworkDurationColor = match (true) {
-            $responseNetworkDuration < 100 => 'green',
-            $responseNetworkDuration < 200 => 'yellow',
-            default => 'red',
+            $responseNetworkDuration === 0.0 => '',
+            $responseNetworkDuration < 100.0 => 'text-green',
+            $responseNetworkDuration < 200.0 => 'text-yellow',
+            $responseNetworkDuration < 400.0 => 'text-orange',
+            default => 'text-red',
         };
 
         $responseNetworkDuration = sprintf('%4.2f', $responseNetworkDuration);
 
         $this->twoColumnDetail(<<<HTML
-            <span class="text-gray mr-1">├</span><span>Network</span>
+            <span class="text-gray mr-1">―</span><span>Network</span>
             <span class="text-gray ml-1">$responseNetworkDurationPercentage %</span>
             HTML, <<<HTML
-            <span class="text-$responseNetworkDurationColor">$responseNetworkDuration ms </span>
+            <span class="$responseNetworkDurationColor">$responseNetworkDuration ms </span>
         HTML);
 
         $tlsHandshakingTime = $metrics['http_req_tls_handshaking']['values']['avg'];
@@ -151,7 +164,7 @@ final readonly class Detail
             'Upload' => "$uploadTime ms",
             'Download' => "$downloadTime ms",
         ] as $title => $value) {
-            $this->twoColumnDetail('<span class="text-gray mr-1">│ ├</span>'.$title, $value);
+            $this->twoColumnDetail('<span class="text-gray mr-1 ml-1">∙</span>'.$title, $value);
         }
     }
 
@@ -165,19 +178,21 @@ final readonly class Detail
             + $metrics['http_req_duration']['values']['avg'];
         $responseServerDuration = $metrics['http_req_waiting']['values']['avg'];
         $responseServerDurationColor = match (true) {
-            $responseDuration < 100 => 'green',
-            $responseDuration < 200 => 'yellow',
-            default => 'red',
+            $responseServerDuration === 0.0 => '',
+            $responseServerDuration < 100.0 => 'text-green',
+            $responseServerDuration < 200.0 => 'text-yellow',
+            $responseServerDuration < 400.0 => 'text-orange',
+            default => 'text-red',
         };
 
         $responseServerDurationPercentage = $responseDuration > 0.00 ? round($responseServerDuration * 100 / $responseDuration, 2) : 0.00;
         $responseServerDuration = sprintf('%4.2f', $responseServerDuration);
 
         $this->twoColumnDetail(<<<HTML
-            <span class="text-gray mr-1">├</span><span>Server</span>
+            <span class="text-gray mr-1">―</span><span>Server</span>
             <span class="text-gray ml-1">$responseServerDurationPercentage %</span>
             HTML, <<<HTML
-            <span class="text-$responseServerDurationColor">$responseServerDuration ms </span>
+            <span class="$responseServerDurationColor">$responseServerDuration ms </span>
         HTML);
     }
 

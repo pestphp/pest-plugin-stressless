@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Pest\Stressless;
 
 use Pest\Exceptions\ShouldNotHappen;
-use Pest\Stressless\ResultPrinters\Blocks;
 use Pest\Stressless\ResultPrinters\Detail;
 use Pest\Stressless\ResultPrinters\Progress;
 use Pest\Stressless\ValueObjects\Binary;
@@ -34,9 +33,14 @@ final readonly class Run
      */
     public function start(): Result
     {
+        $concurrentRequests = (int) $this->options['stages'][1]['target'];
+        $duration = (int) $this->options['stages'][1]['duration'];
+
         $session = new Session(
             $basePath = dirname(__DIR__),
             uniqid('pest', true),
+            $concurrentRequests,
+            $duration,
         );
 
         $process = new Process([
@@ -70,10 +74,6 @@ final readonly class Run
         $result = new Result($metrics); // @phpstan-ignore-line
 
         if ($this->verbose) {
-            $blocks = new Blocks();
-
-            $blocks->print($result);
-
             $detail = new Detail();
 
             $detail->print($result);
