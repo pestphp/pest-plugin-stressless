@@ -30,7 +30,13 @@ final readonly class ServerDuration implements Block
 
         $duration = $array['metrics']['http_req_waiting']['values']['avg'];
 
-        return sprintf('%4.2f ms', $duration);
+        $duration = sprintf('%4.2f ms', $duration);
+
+        if (strlen($duration) < 9) {
+            $duration = str_pad($duration, 9, ' ', STR_PAD_BOTH);
+        }
+
+        return $duration;
     }
 
     /**

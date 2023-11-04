@@ -36,7 +36,7 @@ final readonly class Progress
             <div class="flex mx-2">
                 <span class="text-gray">$date</span>
                 <span class="flex-1"></span>
-                <span class="text-gray">Running stress test on <span class="text-blue">$domain</span></span>
+                <span class="text-gray">Stress testing <span class="text-blue">$domain</span></span>
             </div>
         HTML);
 
@@ -55,7 +55,11 @@ final readonly class Progress
         $buffer = '';
         $lastTime = null;
         while ($this->process->isRunning()) {
-            $output = $tail->getIncrementalOutput();
+            $output = trim($tail->getIncrementalOutput());
+
+            if ($output === '') {
+                continue;
+            }
 
             $output = $buffer.$output;
             $buffer = '';
@@ -65,7 +69,7 @@ final readonly class Progress
             foreach ($lines as $line) {
                 if (str_starts_with($line, '{"metric":"http_req_duration","type":"Point"')) {
                     /** @var array{data: array{time: string, value: float}}|null $point */
-                    $point = json_decode($line, true, 512, JSON_THROW_ON_ERROR);
+                    $point = json_decode($line, true);
 
                     if (is_array($point)) {
                         $currentTime = substr($point['data']['time'], 0, 19);

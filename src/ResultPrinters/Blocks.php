@@ -32,7 +32,7 @@ final readonly class Blocks
 
     private const SUCCESS_RATE = <<<'EOD'
     <%success_rate_color%>%block_size%</>
-    <fg=white;options=bold;%success_rate_color%>   %success_rate%   </>
+    <fg=white;options=bold;%success_rate_color%>     %success_rate%    </>
     <%success_rate_color%>%block_size%</>
     EOD;
 
@@ -43,9 +43,9 @@ final readonly class Blocks
     EOD;
 
     private const NETWORK_DURATION = <<<'EOD'
-    <%ttfb_color%>%block_size%</>
-    <fg=white;options=bold;%ttfb_color%>   %ttfb%   </>
-    <%ttfb_color%>%block_size%</>
+    <%network_color%>%block_size%</>
+    <fg=white;options=bold;%network_color%>   %network%   </>
+    <%network_color%>%block_size%</>
     EOD;
 
     private const SERVER_DURATION = <<<'EOD'
@@ -57,13 +57,9 @@ final readonly class Blocks
     public function print(Result $result): void
     {
         render(<<<'HTML'
-            <div class="mx-2 my-1 text-gray">
-                <span class="text-red">■</span>
-                <span class="ml-1">0-49</span>
-                <span class="text-yellow ml-2">■</span>
-                <span class="ml-1">50-89</span>
-                <span class="text-green ml-2">■</span>
-                <span class="ml-1">90-100</span>
+            <div class="flex mt-1">
+                <span></span>
+                <span class="flex-1 content-repeat-[─] text-gray mx-2"></span>
             </div>
         HTML);
 
@@ -77,11 +73,11 @@ final readonly class Blocks
             '%success_rate_color%' => "bg={$successRate->color()}",
             '%response_time%' => $responseDuration->value(),
             '%response_time_color%' => "bg={$responseDuration->color()}",
-            '%ttfb%' => $networkDuration->value(),
-            '%ttfb_color%' => "bg={$networkDuration->color()}",
+            '%network%' => $networkDuration->value(),
+            '%network_color%' => "bg={$networkDuration->color()}",
             '%server_duration%' => $serverDuration->value(),
             '%server_duration_color%' => "bg={$serverDuration->color()}",
-            '%subtitle%' => 'fg=white;options=bold;fg=white',
+            '%subtitle%' => 'options=bold',
         ];
         $disposition = self::ALL_BLOCKS_IN_ROW;
         $spaceWidth = $this->getSpaceWidth(terminal()->width(), self::BLOCK_SIZE, $disposition);
@@ -154,6 +150,17 @@ final readonly class Blocks
         }
 
         $table->render();
+
+        render(<<<'HTML'
+            <div class="mx-2 my-1 text-gray">
+                <span class="text-red">■</span>
+                <span class="ml-1">0-49</span>
+                <span class="text-yellow ml-2">■</span>
+                <span class="ml-1">50-89</span>
+                <span class="text-green ml-2">■</span>
+                <span class="ml-1">90-100</span>
+            </div>
+        HTML);
     }
 
     /**

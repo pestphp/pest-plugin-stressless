@@ -6,6 +6,7 @@ namespace Pest\Stressless;
 
 use Pest\Exceptions\ShouldNotHappen;
 use Pest\Stressless\ResultPrinters\Blocks;
+use Pest\Stressless\ResultPrinters\Detail;
 use Pest\Stressless\ResultPrinters\Progress;
 use Pest\Stressless\ValueObjects\Binary;
 use Pest\Stressless\ValueObjects\Result;
@@ -72,6 +73,10 @@ final readonly class Run
             $blocks = new Blocks();
 
             $blocks->print($result);
+
+            $detail = new Detail();
+
+            $detail->print($result);
         }
 
         $session->clean();

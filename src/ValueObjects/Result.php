@@ -227,6 +227,22 @@ final readonly class Result
     }
 
     /**
+     * Gets the test time in milliseconds.
+     */
+    public function testRunDuration(): float
+    {
+        return $this->array['state']['testRunDurationMs'];
+    }
+
+    /**
+     * Gets the test number of concurrent users.
+     */
+    public function testRunConcurrentUsers(): int
+    {
+        return $this->array['metrics']['vus_max']['values']['max'];
+    }
+
+    /**
      * Gets the rate of successful requests, as a percentage, between "0.00" and "100.00".
      */
     public function successRate(): float

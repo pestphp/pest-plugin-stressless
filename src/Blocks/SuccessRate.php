@@ -30,6 +30,10 @@ final readonly class SuccessRate implements Block
 
         $percentage = (float) ($array['metrics']['http_req_failed']['values']['fails'] * 100 / $array['metrics']['http_reqs']['values']['count']);
 
+        if ($percentage === 100.0) {
+            return '100 %';
+        }
+
         return sprintf('%4.1f %%', $percentage);
     }
 
