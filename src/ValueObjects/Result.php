@@ -7,15 +7,11 @@ namespace Pest\Stressless\ValueObjects;
 /**
  * @internal
  *
- * @property-read float $averageResponseTime
- * @property-read float $minResponseTime
- * @property-read float $medianResponseTime
- * @property-read float $percentile90ResponseTime
- * @property-read float $percentile95ResponseTime
- * @property-read float $maxResponseTime
- * @property-read int $failedRequests
+ * @property-read float $successRate
+ * @property-read float $failureRate
+ * @property-read int $requests
  * @property-read int $successfulRequests
- * @property-read int $totalRequests
+ * @property-read int $failedRequests
  */
 final readonly class Result
 {
@@ -273,99 +269,6 @@ final readonly class Result
     public function failedRequests(): int
     {
         return $this->array['metrics']['http_req_failed']['values']['passes'];
-    }
-
-    /**
-     * Returns the average request tls handshaking.
-     */
-    public function averageRequestTlsHandshaking(): float
-    {
-        return $this->array['metrics']['http_req_tls_handshaking']['values']['avg'];
-    }
-
-    /**
-     * Returns the average request connecting.
-     */
-    public function averageRequestConnecting(): float
-    {
-        return $this->array['metrics']['http_req_connecting']['values']['avg'];
-    }
-
-    /**
-     * Returns the average request duration.
-     */
-    public function averageRequestDuration(): float
-    {
-        return $this->array['metrics']['http_req_duration']['values']['avg'];
-    }
-
-    /**
-     * Returns the average request waiting.
-     */
-    public function averageRequestWaiting(): float
-    {
-        return $this->array['metrics']['http_req_waiting']['values']['avg'];
-    }
-
-    /**
-     * Returns the median response time.
-     */
-    public function minResponseTime(): float
-    {
-        return $this->array['metrics']['http_req_duration']['values']['min'];
-    }
-
-    /**
-     * Returns the median response time.
-     */
-    public function medianResponseTime(): float
-    {
-        return $this->array['metrics']['http_req_duration']['values']['med'];
-    }
-
-    /**
-     * Returns the 90th percentile response time.
-     */
-    public function percentile90ResponseTime(): float
-    {
-        return $this->array['metrics']['http_req_duration']['values']['p(90)'];
-    }
-
-    /**
-     * Returns the 95th percentile response time.
-     */
-    public function percentile95ResponseTime(): float
-    {
-        return $this->array['metrics']['http_req_duration']['values']['p(95)'];
-    }
-
-    /**
-     * Returns the maximum response time.
-     */
-    public function maxResponseTime(): float
-    {
-        return $this->array['metrics']['http_req_duration']['values']['max'];
-    }
-
-    public function totalRequests(): int
-    {
-        return $this->array['metrics']['http_reqs']['values']['count'];
-    }
-
-    /**
-     * Returns the average request waiting time.
-     */
-    public function getAverageRequestSending(): float
-    {
-        return $this->array['metrics']['http_req_sending']['values']['avg'];
-    }
-
-    /**
-     * Returns the data received rate
-     */
-    public function getAverageDataReceived(): float
-    {
-        return $this->array['metrics']['data_received']['values']['avg'];
     }
 
     /**

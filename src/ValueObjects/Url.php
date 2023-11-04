@@ -25,6 +25,14 @@ final readonly class Url implements Stringable
     }
 
     /**
+     * Gets the domain of the URL.
+     */
+    public function domain(): string
+    {
+        return explode('//', $this->url)[1];
+    }
+
+    /**
      * The string representation of the URL.
      */
     public function __toString(): string

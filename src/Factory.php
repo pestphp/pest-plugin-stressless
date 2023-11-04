@@ -7,6 +7,7 @@ namespace Pest\Stressless;
 use Pest\Stressless\Fluent\WithOptions;
 use Pest\Stressless\ValueObjects\Result;
 use Pest\Stressless\ValueObjects\Url;
+use Pest\TestSuite;
 
 /**
  * @internal
@@ -91,7 +92,7 @@ final class Factory
     {
         $this->dump();
 
-        exit(1);
+        exit(0);
     }
 
     /**
@@ -136,5 +137,12 @@ final class Factory
     public function __get(string $name): mixed
     {
         return $this->{$name}(); // @phpstan-ignore-line
+    }
+
+    public function __destruct()
+    {
+        if (! $this->result instanceof Result && TestSuite::getInstance()->test === null) {
+            $this->dd();
+        }
     }
 }

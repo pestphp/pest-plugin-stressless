@@ -28,9 +28,9 @@ final readonly class ResponseDuration implements Block
     {
         $array = $this->result->toArray();
 
-        $duration = $array['metrics']['req_connecting']['values']['avg']
-            + $array['metrics']['req_tls_handshaking']['values']['avg']
-            + $array['metrics']['req_duration']['values']['avg'];
+        $duration = $array['metrics']['http_req_connecting']['values']['avg']
+            + $array['metrics']['http_req_tls_handshaking']['values']['avg']
+            + $array['metrics']['http_req_duration']['values']['avg'];
 
         return sprintf('%4.2f ms', $duration);
     }
@@ -42,9 +42,9 @@ final readonly class ResponseDuration implements Block
     {
         $array = $this->result->toArray();
 
-        $duration = $array['metrics']['req_connecting']['values']['avg']
-            + $array['metrics']['req_tls_handshaking']['values']['avg']
-            + $array['metrics']['req_duration']['values']['avg'];
+        $duration = $array['metrics']['http_req_connecting']['values']['avg']
+            + $array['metrics']['http_req_tls_handshaking']['values']['avg']
+            + $array['metrics']['http_req_duration']['values']['avg'];
 
         return match (true) {
             $duration < 200 => 'green',
