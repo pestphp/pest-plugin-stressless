@@ -8,6 +8,7 @@ use Pest\Stressless\Fluent\WithOptions;
 use Pest\Stressless\ValueObjects\Result;
 use Pest\Stressless\ValueObjects\Url;
 use Pest\TestSuite;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
@@ -139,10 +140,19 @@ final class Factory
         return $this->{$name}(); // @phpstan-ignore-line
     }
 
+    /**
+     * Destructs the run factory.
+     */
     public function __destruct()
     {
-        if (! $this->result instanceof Result && TestSuite::getInstance()->test === null) {
-            $this->dd();
+        if ($this->result instanceof Result) {
+            return;
         }
+
+        if (TestSuite::getInstance()->test instanceof TestCase) {
+            return;
+        }
+
+        $this->dd();
     }
 }
