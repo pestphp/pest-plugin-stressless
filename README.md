@@ -10,18 +10,19 @@ Pest is an open-sourced software licensed under the **[MIT license](https://open
 
 ---
 
-The section bellow contains the documentation that will be available at **[pestphp.com/docs/stress-testing](https://pestphp.com/docs/stress-testing)** later on.
-
----
-title: Stress Testing
-description: Stress Testing is a type of testing that verifies the stability and reliability of your application under realistic or extreme conditions.
----
-
 # Stress Testing
+
+**Source code**: [github.com/pestphp/pest-plugin-stressless](https://github.com/pestphp/pest-plugin-stressless)
 
 Stress Testing is a type of testing that verifies the stability and reliability of your application under realistic or extreme conditions. For example, you can use stress testing to verify that your application can handle a large number of requests or that it can handle a large amount of data.
 
-With Pest, you can perform a stress testing in two ways:
+To start using Pest's Stress Testing plugin (mostly known as Stressless), you need to require the plugin via Composer.
+
+```bash
+composer require pestphp/pest-plugin-stressless --dev
+```
+
+After requiring the plugin, you can perform a stress test in two ways:
 
 - [Using the `stress` command](#the-stress-command): Useful when you want to quickly stress test a specific endpoint, and have a detailed output on the terminal.
 - [Using the `stress()` method](#the-stress-function): Useful when you want to set expectations on a stress test result.
@@ -70,8 +71,172 @@ it('has a fast response time', function () {
 
 The `stress()` function return the stress test result, which you can use to set expectations. Here is the list of available methods:
 
-- TODO...
+## Request Duration
 
----
+Returns the overall request duration in milliseconds.
 
-TODO
+```php
+$result->requests()->duration()->avg()
+                               ->min()
+                               ->med()    
+                               ->max()
+                               ->p90()
+                               ->p95();
+```
+
+## Requests Count
+
+Returns the number of requests made.
+
+```php
+$result->requests()->count();
+```
+
+## Requests Rate
+
+Returns the number of requests made per second.
+
+```php
+$result->requests()->rate();
+```
+
+## Requests Failed Count
+
+Returns the number of requests that failed.
+
+```php
+$result->requests()->failed()->count();
+```
+
+## Requests Failed Rate
+
+Returns the number of requests that failed per second.
+
+```php
+$result->requests()->failed()->rate();
+```
+
+## Requests Server Duration
+
+Returns the request server duration in milliseconds.
+
+This is the time spent waiting for the server to respond with a status code.
+
+```php
+$result->requests()->server()->duration()->avg();
+                                      // ->min();
+                                      // ->med();    
+                                      // ->max();
+                                      // ->p90();
+                                      // ->p95();
+```
+
+## Requests DNS Lookup Duration
+
+> This metric is affected by the network latency between the client and the DNS server.
+
+Returns the request DNS lookup duration in milliseconds.
+
+```php
+$result->requests()->dnsLookup()->duration()->avg();
+                                         // ->min();
+                                         // ->med();   
+                                         // ->max();
+                                         // ->p90();
+                                         // ->p95();
+```
+
+## Requests TLS Handshaking Duration
+
+> This metric is affected by the network latency between the client and the server.
+
+Returns the request TLS handshaking duration in milliseconds.
+
+```php
+$result->requests()->tlsHandshaking()->duration()->avg();
+                                              // ->min();
+                                              // ->med();   
+                                              // ->max();
+                                              // ->p90();
+                                              // ->p95();
+```
+
+## Requests Download Duration
+
+> This metric is affected by the network latency between the client and the server.
+
+Returns the request download duration in milliseconds.
+
+```php
+$result->requests()->download()->duration()->avg();
+                                        // ->min();
+                                        // ->med();   
+                                        // ->max();
+                                        // ->p90();
+                                        // ->p95();
+```
+
+## Requests Download Data Count
+
+Returns the request download data count in bytes.
+
+```php
+$result->requests()->download()->data()->count();
+```
+
+## Requests Download Data Rate
+
+Returns the request download data rate in bytes per second.
+
+```php
+$result->requests()->download()->data()->rate();
+```
+
+## Requests Upload Duration
+
+> This metric is affected by the network latency between the client and the server.
+
+Returns the request upload duration in milliseconds.
+
+```php
+$result->requests()->upload()->duration()->avg();
+                                      // ->min();
+                                      // ->med();   
+                                      // ->max();
+                                      // ->p90();
+                                      // ->p95();
+```
+
+## Requests Upload Data Count
+
+Returns the request upload data count in bytes.
+
+```php
+$result->requests()->upload()->data()->count();
+```
+
+## Requests Upload Data Rate
+
+Returns the request upload data rate in bytes per second.
+
+```php
+$result->requests()->upload()->data()->rate();
+```
+
+## Test Run Concurrency
+
+Returns the number of concurrent requests made during the stress test, which is the value you set using the `--concurrency` option or the `with()->concurrentRequests()` method.
+
+```php
+
+```php
+$result->testRun()->concurrency();
+```
+
+## Test Run Duration
+
+Returns the duration of the stress test, which is the value you set using the `--duration` option or the `for()->seconds()` method.
+
+```php
+$result->testRun()->duration();
+```
