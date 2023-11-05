@@ -5,7 +5,7 @@ declare(strict_types=1);
 use function Pest\Stressless\stress;
 
 it('may pass', function (): void {
-    $result = stress('nunomaduro.com')
+    $result = stress('example.com')
         ->with(2)->concurrentRequests()
         ->for(1)->second();
 
@@ -13,7 +13,7 @@ it('may pass', function (): void {
 });
 
 it('may fail', function (): void {
-    $result = stress('dummy-nunomaduro.com')
+    $result = stress('dummy-example.com')
         ->with(2)->concurrentRequests()
         ->for(1)->second();
 
