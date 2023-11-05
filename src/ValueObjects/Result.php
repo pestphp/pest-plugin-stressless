@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Pest\Stressless\ValueObjects;
 
+use Pest\Stressless\Result\Requests;
+use Pest\Stressless\Result\TestRun;
+
 /**
  * @internal
  *
- * @property-read float $successRate
- * @property-read float $failureRate
- * @property-read int $requests
- * @property-read int $successfulRequests
- * @property-read int $failedRequests
+ * @property-read Requests $requests
+ * @property-read TestRun $testRun
  */
 final readonly class Result
 {
@@ -156,17 +156,13 @@ final readonly class Result
      *          }
      *        },
      *        data_received: array{
-     *          type: string,
-     *          contains: string,
-     *          values: array{
-     *            "p(95)": float,
-     *            avg: float,
-     *            min: float,
-     *            med: float,
-     *            max: float,
-     *            "p(90)": float
-     *          }
-     *        },
+     *             type: string,
+     *             contains: string,
+     *             values: array{
+     *               count: int,
+     *               rate: float
+     *             }
+     *           },
      *        vus_max: array{
      *          type: string,
      *          contains: string,
@@ -227,64 +223,19 @@ final readonly class Result
     }
 
     /**
-     * Gets the test time in milliseconds.
+     * Returns the details of the requests.
      */
-    public function testRunDuration(): float
+    public function requests(): Requests
     {
-        return $this->array['state']['testRunDurationMs'];
+        return new Requests($this);
     }
 
     /**
-     * Gets the test number of concurrent users.
+     * Returns the details of the test run.
      */
-    public function testRunConcurrentUsers(): int
+    public function testRun(): TestRun
     {
-        return $this->array['metrics']['vus_max']['values']['max'];
-    }
-
-    /**
-     * Gets the rate of successful requests, as a percentage, between "0.00" and "100.00".
-     */
-    public function successRate(): float
-    {
-        $successfulRequests = $this->array['metrics']['http_req_failed']['values']['fails'];
-        $totalRequests = $this->array['metrics']['http_reqs']['values']['count'];
-
-        $percentage = (float) ($successfulRequests * 100 / $totalRequests);
-
-        return min(max(0.00, $percentage), 100.00);
-    }
-
-    /**
-     * Gets the rate of failed requests, as a percentage, between "0.00" and "100.00".
-     */
-    public function failureRate(): float
-    {
-        return 100.00 - $this->successRate();
-    }
-
-    /**
-     * Gets the total number of requests.
-     */
-    public function requests(): int
-    {
-        return $this->array['metrics']['http_reqs']['values']['count'];
-    }
-
-    /**
-     * Gets the total number of successful requests.
-     */
-    public function successfulRequests(): int
-    {
-        return $this->array['metrics']['http_req_failed']['values']['fails'];
-    }
-
-    /**
-     * Gets the total number of failed requests.
-     */
-    public function failedRequests(): int
-    {
-        return $this->array['metrics']['http_req_failed']['values']['passes'];
+        return new TestRun($this);
     }
 
     /**
@@ -433,17 +384,13 @@ final readonly class Result
      *           }
      *         },
      *         data_received: array{
-     *           type: string,
-     *           contains: string,
-     *           values: array{
-     *             "p(95)": float,
-     *             avg: float,
-     *             min: float,
-     *             med: float,
-     *             max: float,
-     *             "p(90)": float
-     *           }
-     *         },
+     *            type: string,
+     *            contains: string,
+     *            values: array{
+     *              count: int,
+     *              rate: float
+     *            }
+     *          },
      *         vus_max: array{
      *           type: string,
      *           contains: string,

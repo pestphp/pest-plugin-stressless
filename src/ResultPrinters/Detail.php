@@ -54,14 +54,14 @@ final readonly class Detail
     {
         $metrics = $result->toArray()['metrics'];
 
-        $testRunDuration = $result->testRunDuration();
+        $testRunDuration = $result->testRun()->duration();
         $testRunDuration = sprintf('%4.2f', $testRunDuration / 1000);
 
         $this->twoColumnDetail('Test Duration', "$testRunDuration s");
 
         $requestsTotal = $metrics['http_reqs']['values']['count'];
         $requestsRate = round($metrics['http_reqs']['values']['rate'], 2);
-        $result->testRunConcurrentUsers();
+        $result->testRun()->concurrency();
 
         $this->twoColumnDetail('Total Requests', <<<HTML
             <span class="text-gray mr-1">$requestsRate reqs/second</span>

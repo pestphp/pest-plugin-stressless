@@ -2,20 +2,206 @@
 
 declare(strict_types=1);
 
-use function Pest\Stressless\stress;
+use Pest\Stressless\ValueObjects\Result;
 
-it('may pass', function (): void {
-    $result = stress('example.com')
-        ->with(2)->concurrentRequests()
-        ->for(1)->second();
+test('duration', function (): void {
+    /** @var Result $result */
+    $result = $this->stress->run();
 
-    expect($result->requests())->toBeGreaterThan(2);
+    $duration = $result->requests()->duration();
+
+    expect($duration->avg())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->min())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->med())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->max())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->p90())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->p95())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0);
 });
 
-it('may fail', function (): void {
-    $result = stress('dummy-example.com')
-        ->with(2)->concurrentRequests()
-        ->for(1)->second();
+test('download data', function (): void {
+    /** @var Result $result */
+    $result = $this->stress->run();
 
-    expect($result->requests())->toBeGreaterThan(0);
+    $data = $result->requests()->download()->data();
+
+    expect($data->count())
+        ->toBeInt()
+        ->toBeGreaterThan(0)
+        ->and($data->rate())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0);
+});
+
+test('download duration', function (): void {
+    /** @var Result $result */
+    $result = $this->stress->run();
+
+    $duration = $result->requests()->download()->duration();
+
+    expect($duration->avg())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->min())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->med())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->max())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->p90())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->p95());
+});
+
+test('failed', function (): void {
+    /** @var Result $result */
+    $result = $this->stress->run();
+
+    $failed = $result->requests()->failed();
+
+    expect($failed->count())
+        ->toBeInt()
+        ->toBe(0)
+        ->and($failed->rate())
+        ->toBeFloat()
+        ->toBe(0.0);
+});
+
+test('server duration', function (): void {
+    /** @var Result $result */
+    $result = $this->stress->run();
+
+    $duration = $result->requests()->server()->duration();
+
+    expect($duration->avg())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->min())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->med())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->max())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->p90())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->p95())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0);
+});
+
+test('upload data', function (): void {
+    /** @var Result $result */
+    $result = $this->stress->run();
+
+    $data = $result->requests()->upload()->data();
+
+    expect($data->count())
+        ->toBeInt()
+        ->toBeGreaterThan(0)
+        ->and($data->rate())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0);
+});
+
+test('upload duration', function (): void {
+    /** @var Result $result */
+    $result = $this->stress->run();
+
+    $duration = $result->requests()->upload()->duration();
+
+    expect($duration->avg())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->min())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->med())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->max())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->p90())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0)
+        ->and($duration->p95());
+});
+
+test('dns lookup duration', function (): void {
+    /** @var Result $result */
+    $result = $this->stress->run();
+
+    $duration = $result->requests()->dnsLookup()->duration();
+
+    expect($duration->avg())
+        ->toBeFloat()
+        ->and($duration->min())
+        ->toBeFloat()
+        ->and($duration->med())
+        ->toBeFloat()
+        ->and($duration->max())
+        ->toBeFloat()
+        ->and($duration->p90())
+        ->toBeFloat()
+        ->and($duration->p95());
+});
+
+test('rate', function (): void {
+    /** @var Result $result */
+    $result = $this->stress->run();
+
+    $requests = $result->requests();
+
+    expect($requests->rate())
+        ->toBeFloat()
+        ->toBeGreaterThan(0.0);
+});
+
+test('count', function (): void {
+    /** @var Result $result */
+    $result = $this->stress->run();
+
+    $requests = $result->requests();
+
+    expect($requests->count())
+        ->toBeInt()
+        ->toBeGreaterThan(0);
+});
+
+test('tls handshake duration', function (): void {
+    /** @var Result $result */
+    $result = $this->stress->run();
+
+    $duration = $result->requests()->tlsHandshake()->duration();
+
+    expect($duration->avg())
+        ->toBeFloat()
+        ->and($duration->min())
+        ->toBeFloat()
+        ->and($duration->med())
+        ->toBeFloat()
+        ->and($duration->max())
+        ->toBeFloat()
+        ->and($duration->p90())
+        ->toBeFloat()
+        ->and($duration->p95());
 });

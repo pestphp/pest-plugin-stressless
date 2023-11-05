@@ -95,11 +95,11 @@ final class Factory
     {
         $this->running = true;
 
-        return $this->result = (new Run(
+        return $this->result ??= ((new Run(
             new Url($this->url),
             $this->options, // @phpstan-ignore-line
             $this->verbose,
-        ))->start();
+        ))->start());
     }
 
     /**
