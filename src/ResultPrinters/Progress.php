@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pest\Stressless\ResultPrinters;
 
+use JsonException;
 use Pest\Stressless\Session;
 use Pest\Stressless\ValueObjects\Url;
 use Symfony\Component\Process\Process;
@@ -34,11 +35,21 @@ final readonly class Progress
         $concurrentRequests = $this->session->concurrentRequests();
         $duration = $this->session->duration();
 
+        $options = 'for '.$duration.' second';
+
+        if ($duration > 1) {
+            $options .= 's';
+        }
+
+        if ($concurrentRequests > 1) {
+            $options = $concurrentRequests.' concurrent requests '.$options.' ';
+        }
+
         render(<<<HTML
             <div class="flex mx-2 max-w-150">
                 <span class="text-gray">Stress testing <span class="text-cyan font-bold">$domain</span></span>
                 <span class="flex-1 ml-1 content-repeat-[―] text-gray"></span>
-                <span class="text-gray ml-1">{$concurrentRequests} concurrent requests for {$duration} seconds</span>
+                <span class="text-gray ml-1">$options</span>
             </div>
         HTML);
 
@@ -70,10 +81,11 @@ final readonly class Progress
 
             foreach ($lines as $line) {
                 if (str_starts_with($line, '{"metric":"http_req_duration","type":"Point"')) {
-                    /** @var array{data: array{time: string, value: float}}|null $point */
-                    $point = json_decode($line, true, 512, JSON_THROW_ON_ERROR);
+                    try {
+                        /** @var array{data: array{time: string, value: float}}|null $point */
+                        $point = json_decode($line, true, 512, JSON_THROW_ON_ERROR);
+                        assert(is_array($point));
 
-                    if (is_array($point)) {
                         $currentTime = substr($point['data']['time'], 0, 19);
                         if ($lastTime !== $currentTime) {
                             $this->printCurrentPoints($points);
@@ -83,7 +95,7 @@ final readonly class Progress
                         }
 
                         $points[] = $point;
-                    } else {
+                    } catch (JsonException) {
                         $buffer .= $line;
                     }
                 }
@@ -104,7 +116,6 @@ final readonly class Progress
 
         if ($points !== []) {
             $average = array_sum(array_map(fn ($point): float => $point['data']['value'], $points)) / count($points);
-            $average = round($average, 2);
 
             $time = substr($points[0]['data']['time'], 11, 8);
 
@@ -118,6 +129,8 @@ final readonly class Progress
             $greenDots = (int) (($average * $width) / $maxResponseTime);
 
             $greenDots = str_repeat('▉', $greenDots);
+
+            $average = sprintf('%4.2f', $average);
 
             render(<<<HTML
                 <div class="flex mx-2 max-w-150">

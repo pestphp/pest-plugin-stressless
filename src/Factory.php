@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pest\Stressless;
 
+use Pest\Stressless\Fluent\StageDurationOptions;
 use Pest\Stressless\Fluent\WithOptions;
 use Pest\Stressless\ValueObjects\Result;
 use Pest\Stressless\ValueObjects\Url;
@@ -23,6 +24,11 @@ final class Factory
     private bool $verbose = false;
 
     /**
+     * Weather or not the factory is running.
+     */
+    private bool $running = false;
+
+    /**
      * The computed result, if any.
      */
     private ?Result $result = null;
@@ -30,7 +36,7 @@ final class Factory
     /**
      * Creates a new instance of the run factory.
      *
-     * @param  array{stages: array<array{duration: string, target: int}>}  $options
+     * @param  array{stages: array<int, array{duration: string, target: int}>}  $options
      */
     private function __construct(private readonly string $url, private array $options)
     {
@@ -51,6 +57,14 @@ final class Factory
     public function with(int $number): WithOptions
     {
         return new WithOptions($this, $number);
+    }
+
+    /**
+     * Specifies that the stage should run for the given duration.
+     */
+    public function for(int $duration): StageDurationOptions
+    {
+        return new StageDurationOptions($this, 1, $duration);
     }
 
     /**
@@ -79,9 +93,11 @@ final class Factory
      */
     public function run(): Result
     {
+        $this->running = true;
+
         return $this->result = (new Run(
             new Url($this->url),
-            $this->options,
+            $this->options, // @phpstan-ignore-line
             $this->verbose,
         ))->start();
     }
@@ -150,6 +166,10 @@ final class Factory
         }
 
         if (TestSuite::getInstance()->test instanceof TestCase) {
+            return;
+        }
+
+        if ($this->running) {
             return;
         }
 

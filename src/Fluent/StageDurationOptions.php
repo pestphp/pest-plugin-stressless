@@ -37,10 +37,7 @@ final readonly class StageDurationOptions
      */
     public function seconds(): Factory
     {
-        $this->factory->stage($this->requests, 0);
-        $this->factory->stage($this->requests, $this->duration);
-
-        return $this->factory;
+        return $this->factory->stage($this->requests, $this->duration);
     }
 
     /**
@@ -58,10 +55,7 @@ final readonly class StageDurationOptions
      */
     public function minutes(): Factory
     {
-        $this->factory->stage($this->requests, 0);
-        $this->factory->stage($this->requests, $this->duration * 60);
-
-        return $this->factory;
+        return $this->factory->stage($this->requests, $this->duration * 60);
     }
 
     /**
@@ -79,9 +73,6 @@ final readonly class StageDurationOptions
      */
     public function hours(): Factory
     {
-        $this->factory->stage($this->requests, 0);
-        $this->factory->stage($this->requests, $this->duration * 60 * 60);
-
-        return $this->factory;
+        return $this->factory->stage($this->requests, $this->duration * 60 * 60);
     }
 }

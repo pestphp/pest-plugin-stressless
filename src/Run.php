@@ -21,7 +21,7 @@ final readonly class Run
     /**
      * Creates a new run instance.
      *
-     * @param  array<string, mixed>  $options
+     * @param  array{stages: array{0: array{duration: string, target: int}}}  $options
      */
     public function __construct(private Url $url, private array $options, private bool $verbose)
     {
@@ -33,8 +33,8 @@ final readonly class Run
      */
     public function start(): Result
     {
-        $concurrentRequests = (int) $this->options['stages'][1]['target'];
-        $duration = (int) $this->options['stages'][1]['duration'];
+        $concurrentRequests = $this->options['stages'][0]['target'];
+        $duration = (int) $this->options['stages'][0]['duration'];
 
         $session = new Session(
             $basePath = dirname(__DIR__),

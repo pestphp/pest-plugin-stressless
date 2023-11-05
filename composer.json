@@ -50,5 +50,12 @@
             "@test:types",
             "@test:unit"
         ]
+    },
+    "extra": {
+        "pest": {
+            "plugins": [
+                "Pest\\Stressless\\Plugin"
+            ]
+        }
     }
 }
