@@ -1,4 +1,4 @@
-This repository contains the Pest Plugin Template.
+This repository contains the Pest Plugin Stresless.
 
 > If you want to start testing your application with Pest, visit the main **[Pest Repository](https://github.com/pestphp/pest)**.
 
