@@ -36,6 +36,11 @@ final readonly class Detail
         $dnsRecords = dns_get_record($domain, DNS_AAAA + DNS_A);
         $dnsRecords = array_map(fn (array $record): string => $record['ipv6'] ?? $record['ip'], $dnsRecords ?: []);
         $dnsRecords = array_unique($dnsRecords);
+        if (count($dnsRecords) > 3) {
+            $dnsRecords = array_slice($dnsRecords, 0, 3);
+            $dnsRecords[] = '(…)';
+        }
+
         $dnsRecords = implode(', ', $dnsRecords);
 
         $this->twoColumnDetail('DNS Lookup Duration', <<<HTML
@@ -84,7 +89,7 @@ final readonly class Detail
 
         $this->twoColumnDetail(<<<HTML
             <span>— TTFB</span>
-            <span class="ml-1 text-gray">$percentage %</span>
+            <span class="ml-1 text-gray">$percentage % — including server processing time</span>
         HTML, "<span class=\"$color\">$value</span>");
 
         $color = $this->color($result->requests->download->duration->avg, 100.0, 300.0, 1000.0);
