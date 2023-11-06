@@ -37,7 +37,7 @@ final readonly class Detail
 
         $color = $this->color($result->requests->duration->avg, 100.0, 300.0, 1000.0);
         $this->twoColumnDetail(
-            'Response Duration',
+            'Request Duration',
             '<span class="'.$color.'">'.$this->ms($total = $result->requests->duration->avg).'</span>'
         );
 
