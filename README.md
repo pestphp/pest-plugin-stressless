@@ -110,12 +110,12 @@ The `stress()` function return the stress test result, which you can use to set 
 Returns the overall request duration in milliseconds.
 
 ```php
-$result->requests()->duration()->avg()
-                               ->min()
-                               ->med()    
-                               ->max()
-                               ->p90()
-                               ->p95();
+$result->requests()->duration()->avg();
+                            // ->min();
+                            // ->med();
+                            // ->max();
+                            // ->p90();
+                            // ->p95();
 ```
 
 ### Requests Count
