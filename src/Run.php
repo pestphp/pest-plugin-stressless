@@ -68,7 +68,7 @@ final readonly class Run
         $metrics = json_decode($summary, true, 512, JSON_THROW_ON_ERROR);
         assert(is_array($metrics));
 
-        $result = new Result($metrics); // @phpstan-ignore-line
+        $result = new Result($this->url, $metrics); // @phpstan-ignore-line
 
         if ($this->verbose) {
             $detail = new Detail();

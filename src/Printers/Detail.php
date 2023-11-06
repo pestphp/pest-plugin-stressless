@@ -29,11 +29,25 @@ final readonly class Detail
 
         $color = $this->color($result->requests->dnsLookup->duration->avg, 20.0, 50.0, 100.0);
         $value = $this->ms($result->requests->dnsLookup->duration->avg);
-        $this->twoColumnDetail('DNS Lookup Duration', "<span class=\"$color\">$value</span>");
+
+        // map all IPv4 and IPv6 addresses of the given domain
+        $domain = $result->url();
+        $domain = (string) parse_url($domain, PHP_URL_HOST);
+        $dnsRecords = dns_get_record($domain, DNS_AAAA + DNS_A);
+        $dnsRecords = array_map(fn (array $record): string => $record['ipv6'] ?? $record['ip'], $dnsRecords ?: []);
+        $dnsRecords = array_unique($dnsRecords);
+        $dnsRecords = implode(', ', $dnsRecords);
+
+        $this->twoColumnDetail('DNS Lookup Duration', <<<HTML
+            <span class="text-gray mr-1">$dnsRecords</span>
+            <span class="$color">$value</span>
+        HTML);
 
         $color = $this->color($result->requests->tlsHandshake->duration->avg, 20.0, 50.0, 100.0);
         $value = $this->ms($result->requests->tlsHandshake->duration->avg);
-        $this->twoColumnDetail('TLS Handshake Duration', "<span class=\"$color\">$value</span>");
+        $this->twoColumnDetail('TLS Handshake Duration', <<<HTML
+            <span class="$color">$value</span>
+        HTML);
 
         $color = $this->color($result->requests->duration->avg, 100.0, 300.0, 1000.0);
         $this->twoColumnDetail(
@@ -46,10 +60,21 @@ final readonly class Detail
         $percentage = $value * 100.0 / $total;
         $percentage = sprintf('%4.1f', $percentage);
         $value = $this->ms($value);
+
+        $dataRate = $result->requests->upload->data->rate()  / 1024.0 / 1024.0;
+        $dataRate = sprintf('%4.2f', $dataRate);
+
+        $dataPerRequestRate = $result->requests->upload->data->rate()  / 1024.0 / 1024.0 / $result->requests->count;
+        $dataPerRequestRate = sprintf('%4.2f', $dataPerRequestRate);
+
         $this->twoColumnDetail(<<<HTML
             <span>— Upload</span>
             <span class="ml-1 text-gray">$percentage %</span>
-        HTML, "<span class=\"$color\">$value</span>");
+        HTML, <<<HTML
+            <span class="text-gray mr-1">$dataPerRequestRate MB/req</span>
+            <span class="text-gray mr-1">$dataRate MB/s</span>
+            <span class="$color">$value</span>
+        HTML);
 
         $color = $this->color($result->requests->ttfb->duration->avg, 50.0, 150.0, 400.0);
         $value = $result->requests->ttfb->duration->avg;
@@ -67,10 +92,21 @@ final readonly class Detail
         $percentage = $value * 100.0 / $total;
         $percentage = sprintf('%4.1f', $percentage);
         $value = $this->ms($value);
+
+        $dataRate = $result->requests->download->data->rate() / 1024.0 / 1024.0;
+        $dataRate = sprintf('%4.2f', $dataRate);
+
+        $dataPerRequestRate = $result->requests->download->data->rate()  / 1024.0 / 1024.0 / $result->requests->count;
+        $dataPerRequestRate = sprintf('%4.2f', $dataPerRequestRate);
+
         $this->twoColumnDetail(<<<HTML
             <span>— Download</span>
             <span class="ml-1 text-gray">$percentage %</span>
-        HTML, "<span class=\"$color\">$value</span>");
+        HTML, <<<HTML
+            <span class="text-gray mr-1">$dataPerRequestRate MB/req</span>
+            <span class="text-gray mr-1">$dataRate MB/s</span>
+            <span class="$color">$value</span>
+        HTML);
 
         render(<<<'HTML'
             <div class="mx-2 max-w-150 text-right flex text-gray">
@@ -110,7 +146,7 @@ final readonly class Detail
         $result->testRun()->concurrency();
 
         $this->twoColumnDetail('Requests Count', <<<HTML
-            <span class="text-gray mr-1">$requestsRate reqs/second</span>
+            <span class="text-gray mr-1">$requestsRate reqs/s</span>
             <span>$requestsTotal requests</span>
         HTML);
 

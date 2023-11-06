@@ -217,9 +217,18 @@ final readonly class Result
      * /
      */
     public function __construct(
+        private Url $url,
         private array $array,
     ) {
         //
+    }
+
+    /**
+     * Returns the URL.
+     */
+    public function url(): string
+    {
+        return $this->url->__toString();
     }
 
     /**
