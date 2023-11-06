@@ -14,3 +14,4 @@ parameters:
     reportUnmatchedIgnoredErrors: true
     ignoreErrors:
         - "#Undefined variable: \\$this#"
+        - "#Short ternary operator is not allowed#"
