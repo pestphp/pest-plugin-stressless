@@ -62,6 +62,8 @@ final class Factory
      */
     public function duration(int $seconds): self
     {
+        assert($seconds > 0, 'The duration must be greater than 0 seconds.');
+
         $this->duration = $seconds;
 
         return $this;
@@ -72,6 +74,8 @@ final class Factory
      */
     public function concurrency(int $requests): self
     {
+        assert($requests > 0, 'The concurrency must be greater than 0 requests.');
+
         $this->concurrency = $requests;
 
         return $this;
