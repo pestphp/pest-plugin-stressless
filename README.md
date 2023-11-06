@@ -25,7 +25,8 @@ In Pest, you can combine the power of Stress Testing with the Expectation API en
 To start using Pest's Stress Testing plugin (mostly known as Stressless), you need to require the plugin via Composer.
 
 ```bash
-composer require pestphp/pest-plugin-stressless --dev
+composer config repositories.pest-plugin-stressless '{"type": "git", "url": "https://github.com/pestphp/pest-plugin-stressless"}' --file composer.json
+composer require pestphp/pest-plugin-stressless:2.x-dev --dev
 ```
 
 After requiring the plugin, you may start using it in two different ways:
