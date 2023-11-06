@@ -11,7 +11,7 @@ use Pest\Stressless\Result;
  *
  * @property-read Duration $duration
  */
-final readonly class Server
+final readonly class Ttfb
 {
     /**
      * Creates a new requests instance.

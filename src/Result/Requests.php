@@ -12,7 +12,7 @@ use Pest\Stressless\Result;
  * @property-read Duration $duration
  * @property-read Download $download
  * @property-read Rate $failed
- * @property-read Server $server
+ * @property-read Ttfb $ttfb
  * @property-read Upload $upload
  * @property-read DnsLookup $dnsLookup
  * @property-read float $rate
@@ -54,11 +54,11 @@ final readonly class Requests
     }
 
     /**
-     * Returns the details of the requests server.
+     * Returns the details of the requests ttfb.
      */
-    public function server(): Server
+    public function ttfb(): Ttfb
     {
-        return new Server($this->result);
+        return new Ttfb($this->result);
     }
 
     /**

@@ -51,8 +51,8 @@ final readonly class Detail
             <span class="ml-1 text-gray">$percentage %</span>
         HTML, "<span class=\"$color\">$value</span>");
 
-        $color = $this->color($result->requests->server->duration->avg, 50.0, 150.0, 400.0);
-        $value = $result->requests->server->duration->avg;
+        $color = $this->color($result->requests->ttfb->duration->avg, 50.0, 150.0, 400.0);
+        $value = $result->requests->ttfb->duration->avg;
         $percentage = $value * 100.0 / $total;
         $percentage = sprintf('%4.1f', $percentage);
         $value = $this->ms($value);
@@ -100,7 +100,10 @@ final readonly class Detail
         $testRunDuration = $result->testRun()->duration();
         $testRunDuration = sprintf('%4.2f', $testRunDuration / 1000);
 
+        $testRunConcurrency = $result->testRun()->concurrency();
+
         $this->twoColumnDetail('Test Duration', "$testRunDuration s");
+        $this->twoColumnDetail('Test Concurrency', "$testRunConcurrency");
 
         $requestsTotal = $metrics['http_reqs']['values']['count'];
         $requestsRate = round($metrics['http_reqs']['values']['rate'], 2);

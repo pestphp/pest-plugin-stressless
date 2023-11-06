@@ -82,11 +82,11 @@ test('failed', function (): void {
         ->toBe(0.0);
 });
 
-test('server duration', function (): void {
+test('ttfb duration', function (): void {
     /** @var Result $result */
     $result = $this->stress->run();
 
-    $duration = $result->requests()->server()->duration();
+    $duration = $result->requests()->ttfb()->duration();
 
     expect($duration->avg())
         ->toBeFloat()

@@ -151,14 +151,12 @@ Returns the number of requests that failed per second.
 $result->requests()->failed()->rate();
 ```
 
-### Requests Server Duration
+### Requests Time To First Byte Duration / TTFB
 
-Returns the request server duration in milliseconds.
-
-This is the time spent waiting for the server to respond with a status code.
+Returns the request time to first byte duration in milliseconds.
 
 ```php
-$result->requests()->server()->duration()->avg();
+$result->requests()->ttfb()->duration()->avg();
                                       // ->min();
                                       // ->med();    
                                       // ->max();
