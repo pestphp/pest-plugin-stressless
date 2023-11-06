@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Pest\Stressless;
 
-use Pest\TestSuite;
-use PHPUnit\Framework\TestCase;
-
 /**
  * @internal
  *
@@ -28,11 +25,6 @@ final class Factory
      * The duration of the run in seconds.
      */
     private int $duration = 5;
-
-    /**
-     * Weather or not the factory is running.
-     */
-    private bool $running = false;
 
     /**
      * The computed result, if any.
@@ -102,6 +94,10 @@ final class Factory
      */
     public function run(): Result
     {
+        if ($this->result instanceof Result) {
+            return $this->result;
+        }
+
         $this->options['stages'] = [[
             'duration' => sprintf('%ds', $this->duration),
             'target' => $this->concurrency,
@@ -109,9 +105,7 @@ final class Factory
 
         $this->options['throw'] = true;
 
-        $this->running = true;
-
-        return $this->result ??= ((new Run(
+        return $this->result = ((new Run(
             new Url($this->url),
             $this->options,
             $this->verbose,
@@ -170,25 +164,5 @@ final class Factory
     public function __get(string $name): mixed
     {
         return $this->{$name}(); // @phpstan-ignore-line
-    }
-
-    /**
-     * Destructs the run factory.
-     */
-    public function __destruct()
-    {
-        if ($this->result instanceof Result) {
-            return;
-        }
-
-        if (TestSuite::getInstance()->test instanceof TestCase) {
-            return;
-        }
-
-        if ($this->running) {
-            return;
-        }
-
-        $this->dd();
     }
 }

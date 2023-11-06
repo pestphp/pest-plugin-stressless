@@ -62,7 +62,7 @@ final readonly class Detail
 
         $color = $this->color($result->requests->upload->duration->avg, 50.0, 150.0, 250.0);
         $value = $result->requests->upload->duration->avg;
-        $percentage = $value * 100.0 / $total;
+        $percentage = $total === 0.0 ? 0.0 : ($value * 100.0 / $total);
         $percentage = sprintf('%4.1f', $percentage);
         $value = $this->ms($value);
 
@@ -83,7 +83,7 @@ final readonly class Detail
 
         $color = $this->color($result->requests->ttfb->duration->avg, 50.0, 150.0, 400.0);
         $value = $result->requests->ttfb->duration->avg;
-        $percentage = $value * 100.0 / $total;
+        $percentage = $total === 0.0 ? 0.0 : ($value * 100.0 / $total);
         $percentage = sprintf('%4.1f', $percentage);
         $value = $this->ms($value);
 
@@ -94,7 +94,7 @@ final readonly class Detail
 
         $color = $this->color($result->requests->download->duration->avg, 100.0, 300.0, 1000.0);
         $value = $result->requests->download->duration->avg;
-        $percentage = $value * 100.0 / $total;
+        $percentage = $total === 0.0 ? 0.0 : ($value * 100.0 / $total);
         $percentage = sprintf('%4.1f', $percentage);
         $value = $this->ms($value);
 
