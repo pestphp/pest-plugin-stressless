@@ -7,6 +7,7 @@ namespace Pest\Stressless\Printers;
 use Pest\Stressless\Result;
 
 use function Termwind\render;
+use function Termwind\terminal;
 
 /**
  * @internal
@@ -36,12 +37,11 @@ final readonly class Detail
         $dnsRecords = dns_get_record($domain, DNS_AAAA + DNS_A);
         $dnsRecords = array_map(fn (array $record): string => $record['ipv6'] ?? $record['ip'], $dnsRecords ?: []);
         $dnsRecords = array_unique($dnsRecords);
-        if (count($dnsRecords) > 3) {
-            $dnsRecords = array_slice($dnsRecords, 0, 3);
-            $dnsRecords[] = '(…)';
-        }
-
         $dnsRecords = implode(', ', $dnsRecords);
+
+        if (strlen($dnsRecords) > ($size = terminal()->width() - 100)) {
+            $dnsRecords = substr($dnsRecords, 0, $size).'(…)';
+        }
 
         $this->twoColumnDetail('DNS Lookup Duration', <<<HTML
             <span class="text-gray mr-1">$dnsRecords</span>
