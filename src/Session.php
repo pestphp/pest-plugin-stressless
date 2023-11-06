@@ -17,7 +17,7 @@ final readonly class Session
     public function __construct(
         private string $basePath,
         private string $id,
-        private int $concurrentRequests,
+        private int $concurrency,
         private int $duration,
     ) {
         //
@@ -55,9 +55,9 @@ final readonly class Session
     /**
      * Gets the number of concurrent requests.
      */
-    public function concurrentRequests(): int
+    public function concurrency(): int
     {
-        return $this->concurrentRequests;
+        return $this->concurrency;
     }
 
     /**

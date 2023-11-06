@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Pest\Stressless\ValueObjects\Result;
+use Pest\Stressless\Result;
 
 test('duration', function (): void {
     /** @var Result $result */

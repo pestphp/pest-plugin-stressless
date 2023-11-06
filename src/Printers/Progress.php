@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Pest\Stressless\ResultPrinters;
+namespace Pest\Stressless\Printers;
 
 use JsonException;
 use Pest\Stressless\Session;
-use Pest\Stressless\ValueObjects\Url;
+use Pest\Stressless\Url;
 use Symfony\Component\Process\Process;
 
 use function Termwind\render;
@@ -32,7 +32,7 @@ final readonly class Progress
     {
         $domain = $this->url->domain();
 
-        $concurrentRequests = $this->session->concurrentRequests();
+        $concurrency = $this->session->concurrency();
         $duration = $this->session->duration();
 
         $options = 'for '.$duration.' second';
@@ -41,8 +41,8 @@ final readonly class Progress
             $options .= 's';
         }
 
-        if ($concurrentRequests > 1) {
-            $options = $concurrentRequests.' concurrent requests '.$options.' ';
+        if ($concurrency > 1) {
+            $options = $concurrency.' concurrent requests '.$options.' ';
         }
 
         render(<<<HTML

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pest\Stressless\ValueObjects;
+namespace Pest\Stressless;
 
 use Pest\Stressless\Result\Requests;
 use Pest\Stressless\Result\TestRun;

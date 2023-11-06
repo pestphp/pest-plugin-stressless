@@ -89,10 +89,10 @@ By default, the stress test duration will be 10 seconds. However, you may custom
 $result = stress('example.com')->for(5)->seconds();
 ```
 
-In addition, the number of concurrent requests will be 1. However, you may also customize this value using the `with()->concurrentRequests()` method:
+In addition, the number of concurrent requests will be 1. However, you may also customize this value using the `concurrently` method:
 
 ```php
-$result = stress('example.com')->with(5)->concurrentRequests()->for(5)->seconds();
+$result = stress('example.com')->concurrently(requests: 2)->for(5)->seconds();
 ```
 
 At any time, you may `dd` the stress test result to see all the available metrics:
@@ -259,7 +259,7 @@ $result->requests()->upload()->data()->rate();
 
 ### Test Run Concurrency
 
-Returns the number of concurrent requests made during the stress test, which is the value you set using the `--concurrency` option or the `with()->concurrentRequests()` method.
+Returns the number of concurrent requests made during the stress test, which is the value you set using the `--concurrency` option or the `concurrently` method.
 
 ```php
 $result->testRun()->concurrency();

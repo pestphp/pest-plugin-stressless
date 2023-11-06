@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Pest\Stressless\Result;
 
-use Pest\Stressless\ValueObjects\Result;
+use Pest\Stressless\Result;
 
 /**
  * @internal

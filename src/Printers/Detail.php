@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Pest\Stressless\ResultPrinters;
+namespace Pest\Stressless\Printers;
 
-use Pest\Stressless\ValueObjects\Result;
+use Pest\Stressless\Result;
 
 use function Termwind\render;
 

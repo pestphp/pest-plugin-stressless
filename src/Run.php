@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace Pest\Stressless;
 
 use Pest\Exceptions\ShouldNotHappen;
-use Pest\Stressless\ResultPrinters\Detail;
-use Pest\Stressless\ResultPrinters\Progress;
-use Pest\Stressless\ValueObjects\Binary;
-use Pest\Stressless\ValueObjects\Result;
-use Pest\Stressless\ValueObjects\Url;
+use Pest\Stressless\Printers\Detail;
+use Pest\Stressless\Printers\Progress;
 use RuntimeException;
 use Symfony\Component\Process\Process;
 
@@ -33,13 +30,13 @@ final readonly class Run
      */
     public function start(): Result
     {
-        $concurrentRequests = $this->options['stages'][0]['target'];
+        $concurrency = $this->options['stages'][0]['target'];
         $duration = (int) $this->options['stages'][0]['duration'];
 
         $session = new Session(
             $basePath = dirname(__DIR__),
             uniqid('pest', true),
-            $concurrentRequests,
+            $concurrency,
             $duration,
         );
 

@@ -2,21 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Pest\Stressless\Fluent;
-
-use Pest\Stressless\Factory;
+namespace Pest\Stressless;
 
 /**
  * @internal
  */
-final readonly class StageDurationOptions
+final readonly class DurationOptions
 {
     /**
      * Creates a new stage duration options instance.
      */
     public function __construct(
         private Factory $factory,
-        private int $requests,
         private int $duration,
     ) {
         //
@@ -37,7 +34,7 @@ final readonly class StageDurationOptions
      */
     public function seconds(): Factory
     {
-        return $this->factory->stage($this->requests, $this->duration);
+        return $this->factory->duration($this->duration);
     }
 
     /**
@@ -55,7 +52,7 @@ final readonly class StageDurationOptions
      */
     public function minutes(): Factory
     {
-        return $this->factory->stage($this->requests, $this->duration * 60);
+        return $this->factory->duration($this->duration * 60);
     }
 
     /**
@@ -73,6 +70,6 @@ final readonly class StageDurationOptions
      */
     public function hours(): Factory
     {
-        return $this->factory->stage($this->requests, $this->duration * 60 * 60);
+        return $this->factory->duration($this->duration * 60 * 60);
     }
 }

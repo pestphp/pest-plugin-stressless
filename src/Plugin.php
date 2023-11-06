@@ -62,8 +62,7 @@ final class Plugin implements HandlesArguments
         }
 
         stress($domain)
-            ->with($concurrency)
-            ->concurrentRequests()
+            ->concurrently($concurrency)
             ->for($duration)
             ->seconds()
             ->dd();

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Pest\Stressless\ValueObjects\Binary;
+use Pest\Stressless\Binary;
 
 it('infers the path from the environment on mac OS', function (): void {
     $binary = Binary::k6();

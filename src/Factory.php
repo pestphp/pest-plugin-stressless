@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Pest\Stressless;
 
-use Pest\Stressless\Fluent\StageDurationOptions;
-use Pest\Stressless\Fluent\WithOptions;
-use Pest\Stressless\ValueObjects\Result;
-use Pest\Stressless\ValueObjects\Url;
 use Pest\TestSuite;
 use PHPUnit\Framework\TestCase;
 
@@ -22,6 +18,16 @@ final class Factory
      * Weather or not the run should be verbose.
      */
     private bool $verbose = false;
+
+    /**
+     * The number of concurrent requests.
+     */
+    private int $concurrency = 1;
+
+    /**
+     * The duration of the run in seconds.
+     */
+    private int $duration = 5;
 
     /**
      * Weather or not the factory is running.
@@ -52,40 +58,39 @@ final class Factory
     }
 
     /**
-     * Specifies that run should run with the given number of something to be determined.
+     * Specifies that run should run for the given number of seconds.
      */
-    public function with(int $number): WithOptions
+    public function duration(int $seconds): self
     {
-        return new WithOptions($this, $number);
+        $this->duration = $seconds;
+
+        return $this;
+    }
+
+    /**
+     * Specifies that run should run with the given number of concurrent requests.
+     */
+    public function concurrency(int $requests): self
+    {
+        $this->concurrency = $requests;
+
+        return $this;
+    }
+
+    /**
+     * Specifies that run should run with the given number of concurrent requests.
+     */
+    public function concurrently(int $requests): self
+    {
+        return $this->concurrency($requests);
     }
 
     /**
      * Specifies that the stage should run for the given duration.
      */
-    public function for(int $duration): StageDurationOptions
+    public function for(int $duration): DurationOptions
     {
-        return new StageDurationOptions($this, 1, $duration);
-    }
-
-    /**
-     * Specifies that run should run with the given number of something to be determined.
-     */
-    public function then(int $with): WithOptions
-    {
-        return new WithOptions($this, $with);
-    }
-
-    /**
-     * Specifies that the stress test should make the given number of requests concurrently for the given duration in seconds.
-     */
-    public function stage(int $requests, int $seconds): self
-    {
-        $this->options['stages'][] = [
-            'duration' => "{$seconds}s",
-            'target' => $requests,
-        ];
-
-        return $this;
+        return new DurationOptions($this, $duration);
     }
 
     /**
@@ -93,15 +98,16 @@ final class Factory
      */
     public function run(): Result
     {
-        if ($this->options['stages'] === []) {
-            $this->stage(1, 10);
-        }
+        $this->options['stages'] = [[
+            'duration' => sprintf('%ds', $this->duration),
+            'target' => $this->concurrency,
+        ]];
 
         $this->running = true;
 
         return $this->result ??= ((new Run(
             new Url($this->url),
-            $this->options, // @phpstan-ignore-line
+            $this->options,
             $this->verbose,
         ))->start());
     }
