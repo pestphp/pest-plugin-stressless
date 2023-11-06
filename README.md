@@ -96,7 +96,7 @@ In addition, the number of concurrent requests will be 1. However, you may also 
 $result = stress('example.com')->concurrently(requests: 2)->for(5)->seconds();
 ```
 
-At any time, you may `dd` the stress test result to see all the available metrics:
+At any time, you may `dd` the stress test result to see its details like if you were using the `stress` command):
 
 ```php
 $result = stress('example.com')->dd();
