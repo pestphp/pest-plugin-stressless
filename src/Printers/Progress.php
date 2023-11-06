@@ -46,10 +46,10 @@ final readonly class Progress
         }
 
         render(<<<HTML
-            <div class="flex mx-2 max-w-150">
-                <span class="text-gray">Stress testing <span class="text-cyan font-bold">$domain</span></span>
-                <span class="flex-1 ml-1 content-repeat-[―] text-gray"></span>
-                <span class="text-gray ml-1">$options</span>
+            <div class="flex mx-2 max-w-150 space-x-1 text-gray">
+                <span>Stress testing <span class="text-cyan font-bold">$domain</span></span>
+                <span class="flex-1 content-repeat-[―]"></span>
+                <span>$options</span>
             </div>
         HTML);
 
@@ -133,13 +133,12 @@ final readonly class Progress
             $average = sprintf('%4.2f', $average);
 
             render(<<<HTML
-                <div class="flex mx-2 max-w-150">
-                    <span class="text-gray">
+                <div class="flex justify-between mx-2 max-w-150 text-gray">
+                    <span>
                         <span>{$time}</span>
-                        <span class="ml-1 text-gray">$greenDots</span>
+                        <span class="ml-1">{$greenDots}</span>
                     </span>
-                    <span class="flex-1"></span>
-                    <span class="text-gray ml-1">{$average}ms</span>
+                    <span class="ml-1">{$average}ms</span>
                 </div>
             HTML);
         }

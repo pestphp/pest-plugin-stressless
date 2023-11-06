@@ -20,9 +20,9 @@ final readonly class Detail
     public function print(Result $result): void
     {
         render(<<<'HTML'
-            <div class="flex mx-2 max-w-150">
-                <span class="text-gray">Result</span>
-                <span class="flex-1 ml-1 content-repeat-[―] text-gray"></span>
+            <div class="flex mx-2 max-w-150 text-gray">
+                <span>Result</span>
+                <span class="flex-1 ml-1 content-repeat-[―]"></span>
             </div>
         HTML);
 
@@ -114,9 +114,7 @@ final readonly class Detail
         HTML);
 
         render(<<<'HTML'
-            <div class="mx-2 max-w-150 text-right flex text-gray">
-                <span></span>
-                <span class="flex-1"></span>
+            <div class="mx-2 max-w-150 text-right text-gray">
                 <span>
                     <span class="text-red">■</span>
                     <span class="mx-1">Critical</span>
@@ -127,7 +125,7 @@ final readonly class Detail
                     <span class="text-green ml-1">■</span>
                     <span class="ml-1">Excellent</span>
                 </span>
-            </div>);
+            </div>
         HTML);
     }
 
@@ -181,7 +179,7 @@ final readonly class Detail
                     $right
                 </span>
             </div>
-            HTML);
+        HTML);
     }
 
     /**
