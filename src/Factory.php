@@ -93,6 +93,10 @@ final class Factory
      */
     public function run(): Result
     {
+        if ($this->options['stages'] === []) {
+            $this->stage(1, 10);
+        }
+
         $this->running = true;
 
         return $this->result ??= ((new Run(
