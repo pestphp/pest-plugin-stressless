@@ -262,8 +262,6 @@ $result->requests()->upload()->data()->rate();
 Returns the number of concurrent requests made during the stress test, which is the value you set using the `--concurrency` option or the `with()->concurrentRequests()` method.
 
 ```php
-
-```php
 $result->testRun()->concurrency();
 ```
 
