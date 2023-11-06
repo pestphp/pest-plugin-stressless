@@ -66,10 +66,10 @@ final readonly class Detail
         $percentage = sprintf('%4.1f', $percentage);
         $value = $this->ms($value);
 
-        $dataRate = $result->requests->upload->data->rate()  / 1024.0 / 1024.0;
+        $dataRate = $result->requests->upload->data->rate() / 1024.0 / 1024.0;
         $dataRate = sprintf('%4.2f', $dataRate);
 
-        $dataPerRequestRate = $result->requests->upload->data->rate()  / 1024.0 / 1024.0 / $result->requests->count;
+        $dataPerRequestRate = $result->requests->upload->data->rate() / 1024.0 / 1024.0 / $result->requests->count;
         $dataPerRequestRate = sprintf('%4.2f', $dataPerRequestRate);
 
         $this->twoColumnDetail(<<<HTML
@@ -101,7 +101,7 @@ final readonly class Detail
         $dataRate = $result->requests->download->data->rate() / 1024.0 / 1024.0;
         $dataRate = sprintf('%4.2f', $dataRate);
 
-        $dataPerRequestRate = $result->requests->download->data->rate()  / 1024.0 / 1024.0 / $result->requests->count;
+        $dataPerRequestRate = $result->requests->download->data->rate() / 1024.0 / 1024.0 / $result->requests->count;
         $dataPerRequestRate = sprintf('%4.2f', $dataPerRequestRate);
 
         $this->twoColumnDetail(<<<HTML
