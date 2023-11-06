@@ -28,4 +28,12 @@ final readonly class Server
     {
         return new Duration($this->result->toArray()['metrics']['http_req_waiting']['values']);
     }
+
+    /**
+     * Proxies the properties to methods.
+     */
+    public function __get(string $name): mixed
+    {
+        return $this->{$name}(); // @phpstan-ignore-line
+    }
 }

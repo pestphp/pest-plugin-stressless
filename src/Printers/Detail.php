@@ -26,8 +26,51 @@ final readonly class Detail
         HTML);
 
         $this->overview($result);
-        $this->server($result);
-        $this->network($result);
+
+        $color = $this->color($result->requests->dnsLookup->duration->avg, 20.0, 50.0, 100.0);
+        $value = $this->ms($result->requests->dnsLookup->duration->avg);
+        $this->twoColumnDetail('DNS Lookup Duration', "<span class=\"$color\">$value</span>");
+
+        $color = $this->color($result->requests->tlsHandshake->duration->avg, 20.0, 50.0, 100.0);
+        $value = $this->ms($result->requests->tlsHandshake->duration->avg);
+        $this->twoColumnDetail('TLS Handshake Duration', "<span class=\"$color\">$value</span>");
+
+        $color = $this->color($result->requests->duration->avg, 100.0, 300.0, 1000.0);
+        $this->twoColumnDetail(
+            'Response Duration',
+            '<span class="'.$color.'">'.$this->ms($total = $result->requests->duration->avg).'</span>'
+        );
+
+        $color = $this->color($result->requests->upload->duration->avg, 50.0, 150.0, 250.0);
+        $value = $result->requests->upload->duration->avg;
+        $percentage = $value * 100.0 / $total;
+        $percentage = sprintf('%4.1f', $percentage);
+        $value = $this->ms($value);
+        $this->twoColumnDetail(<<<HTML
+            <span>— Upload</span>
+            <span class="ml-1 text-gray">$percentage %</span>
+        HTML, "<span class=\"$color\">$value</span>");
+
+        $color = $this->color($result->requests->server->duration->avg, 50.0, 150.0, 400.0);
+        $value = $result->requests->server->duration->avg;
+        $percentage = $value * 100.0 / $total;
+        $percentage = sprintf('%4.1f', $percentage);
+        $value = $this->ms($value);
+
+        $this->twoColumnDetail(<<<HTML
+            <span>— TTFB</span>
+            <span class="ml-1 text-gray">$percentage %</span>
+        HTML, "<span class=\"$color\">$value</span>");
+
+        $color = $this->color($result->requests->download->duration->avg, 100.0, 300.0, 1000.0);
+        $value = $result->requests->download->duration->avg;
+        $percentage = $value * 100.0 / $total;
+        $percentage = sprintf('%4.1f', $percentage);
+        $value = $this->ms($value);
+        $this->twoColumnDetail(<<<HTML
+            <span>— Download</span>
+            <span class="ml-1 text-gray">$percentage %</span>
+        HTML, "<span class=\"$color\">$value</span>");
 
         render(<<<'HTML'
             <div class="mx-2 max-w-150 text-right flex text-gray">
@@ -63,7 +106,7 @@ final readonly class Detail
         $requestsRate = round($metrics['http_reqs']['values']['rate'], 2);
         $result->testRun()->concurrency();
 
-        $this->twoColumnDetail('Total Requests', <<<HTML
+        $this->twoColumnDetail('Requests Count', <<<HTML
             <span class="text-gray mr-1">$requestsRate reqs/second</span>
             <span>$requestsTotal requests</span>
         HTML);
@@ -76,109 +119,6 @@ final readonly class Detail
 
         $this->twoColumnDetail('Success Rate', <<<HTML
             <span class="font-bold text-$successRateColor">$successRate %</span>
-        HTML);
-
-        $responseDuration = $metrics['http_req_connecting']['values']['avg']
-            + $metrics['http_req_tls_handshaking']['values']['avg']
-            + $metrics['http_req_duration']['values']['avg'];
-
-        $responseDurationColor = match (true) {
-            $responseDuration === 0.0 => '',
-            $responseDuration < 200.0 => 'text-green',
-            $responseDuration < 400.0 => 'text-yellow',
-            $responseDuration < 800.0 => 'text-orange',
-            default => 'text-red',
-        };
-
-        $responseDuration = sprintf('%4.2f', $responseDuration);
-
-        $this->twoColumnDetail('Response Duration', <<<HTML
-            <span class="$responseDurationColor font-bold">$responseDuration ms</span>
-        HTML);
-    }
-
-    /**
-     * Prints the network's detail.
-     */
-    private function network(Result $result): void
-    {
-        $metrics = $result->toArray()['metrics'];
-
-        $responseDuration = $metrics['http_req_connecting']['values']['avg']
-            + $metrics['http_req_tls_handshaking']['values']['avg']
-            + $metrics['http_req_duration']['values']['avg'];
-
-        $responseNetworkDuration = $metrics['http_req_connecting']['values']['avg']
-            + $metrics['http_req_tls_handshaking']['values']['avg']
-            + $metrics['http_req_duration']['values']['avg']
-            - $metrics['http_req_waiting']['values']['avg'];
-        $responseNetworkDurationPercentage = $responseDuration > 0.00 ? round($responseNetworkDuration * 100 / $responseDuration, 2) : 0.00;
-        $responseNetworkDurationColor = match (true) {
-            $responseNetworkDuration === 0.0 => '',
-            $responseNetworkDuration < 100.0 => 'text-green',
-            $responseNetworkDuration < 200.0 => 'text-yellow',
-            $responseNetworkDuration < 400.0 => 'text-orange',
-            default => 'text-red',
-        };
-
-        $responseNetworkDuration = sprintf('%4.2f', $responseNetworkDuration);
-
-        $this->twoColumnDetail(<<<HTML
-            <span class="text-gray mr-1">―</span><span>Network</span>
-            <span class="text-gray ml-1">$responseNetworkDurationPercentage %</span>
-            HTML, <<<HTML
-            <span class="$responseNetworkDurationColor">$responseNetworkDuration ms </span>
-        HTML);
-
-        $tlsHandshakingTime = $metrics['http_req_tls_handshaking']['values']['avg'];
-        $tlsHandshakingTime = sprintf('%4.2f', $tlsHandshakingTime);
-
-        $dnsLookupTime = $metrics['http_req_connecting']['values']['avg'];
-        $dnsLookupTime = sprintf('%4.2f', $dnsLookupTime);
-
-        $uploadTime = $metrics['http_req_sending']['values']['avg'];
-        $uploadTime = sprintf('%4.2f', $uploadTime);
-
-        $downloadTime = $metrics['http_req_receiving']['values']['avg'];
-        $downloadTime = sprintf('%4.2f', $downloadTime);
-
-        foreach ([
-            'TLS Handshaking' => "$tlsHandshakingTime ms",
-            'DNS Lookup' => "$dnsLookupTime ms",
-            'Upload' => "$uploadTime ms",
-            'Download' => "$downloadTime ms",
-        ] as $title => $value) {
-            $this->twoColumnDetail('<span class="text-gray mr-1 ml-1">∙</span>'.$title, $value);
-        }
-    }
-
-    /**
-     * Prints the server's detail.
-     */
-    private function server(Result $result): void
-    {
-        $metrics = $result->toArray()['metrics'];
-
-        $responseDuration = $metrics['http_req_connecting']['values']['avg']
-            + $metrics['http_req_tls_handshaking']['values']['avg']
-            + $metrics['http_req_duration']['values']['avg'];
-        $responseServerDuration = $metrics['http_req_waiting']['values']['avg'];
-        $responseServerDurationColor = match (true) {
-            $responseServerDuration === 0.0 => '',
-            $responseServerDuration < 100.0 => 'text-green',
-            $responseServerDuration < 200.0 => 'text-yellow',
-            $responseServerDuration < 400.0 => 'text-orange',
-            default => 'text-red',
-        };
-
-        $responseServerDurationPercentage = $responseDuration > 0.00 ? round($responseServerDuration * 100 / $responseDuration, 2) : 0.00;
-        $responseServerDuration = sprintf('%4.2f', $responseServerDuration);
-
-        $this->twoColumnDetail(<<<HTML
-            <span class="text-gray mr-1">―</span><span>Server</span>
-            <span class="text-gray ml-1">$responseServerDurationPercentage %</span>
-            HTML, <<<HTML
-            <span class="$responseServerDurationColor">$responseServerDuration ms </span>
         HTML);
     }
 
@@ -198,5 +138,27 @@ final readonly class Detail
                 </span>
             </div>
             HTML);
+    }
+
+    /**
+     * Returns the formatted duration in milliseconds.
+     */
+    private function ms(float $duration): string
+    {
+        return sprintf('%4.2f ms', $duration);
+    }
+
+    /**
+     * Returns the color for the given duration.
+     */
+    private function color(float $duration, float $excellent, float $ok, float $poor): string
+    {
+        return match (true) {
+            $duration === 0.0 => '',
+            $duration <= $excellent => 'text-green font-bold',
+            $duration <= $ok => 'text-yellow font-bold',
+            $duration <= $poor => 'text-orange font-bold',
+            default => 'text-red font-bold',
+        };
     }
 }

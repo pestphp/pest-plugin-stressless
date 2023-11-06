@@ -28,4 +28,12 @@ final readonly class TlsHandshake
     {
         return new Duration($this->result->toArray()['metrics']['http_req_tls_handshaking']['values']);
     }
+
+    /**
+     * Proxies the properties to methods.
+     */
+    public function __get(string $name): mixed
+    {
+        return $this->{$name}(); // @phpstan-ignore-line
+    }
 }

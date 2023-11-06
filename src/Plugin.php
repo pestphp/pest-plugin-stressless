@@ -53,8 +53,6 @@ final class Plugin implements HandlesArguments
             }
         }
 
-        $concurrency = 1;
-
         foreach ($arguments as $argument) {
             if (str_starts_with($argument, '--concurrency=')) {
                 $run->concurrently((int) str_replace('--concurrency=', '', $argument));

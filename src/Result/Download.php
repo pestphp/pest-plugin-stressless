@@ -37,4 +37,12 @@ final readonly class Download
     {
         return new Duration($this->result->toArray()['metrics']['http_req_receiving']['values']);
     }
+
+    /**
+     * Proxies the properties to methods.
+     */
+    public function __get(string $name): mixed
+    {
+        return $this->{$name}(); // @phpstan-ignore-line
+    }
 }
