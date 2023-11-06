@@ -39,7 +39,7 @@ final readonly class Detail
         $dnsRecords = array_unique($dnsRecords);
         $dnsRecords = implode(', ', $dnsRecords);
 
-        if (strlen($dnsRecords) > ($size = terminal()->width() - 100)) {
+        if (strlen($dnsRecords) > 0 && strlen($dnsRecords) > ($size = terminal()->width() - 30)) {
             $dnsRecords = substr($dnsRecords, 0, $size).'(…)';
         }
 
@@ -114,7 +114,7 @@ final readonly class Detail
         HTML);
 
         render(<<<'HTML'
-            <div class="mx-2 max-w-150 text-right text-gray">
+            <div class="mx-2 mb-1 max-w-150 text-right text-gray">
                 <span>
                     <span class="text-red">■</span>
                     <span class="mx-1">Critical</span>

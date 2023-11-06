@@ -46,7 +46,7 @@ final readonly class Progress
         }
 
         render(<<<HTML
-            <div class="flex mx-2 max-w-150 space-x-1 text-gray">
+            <div class="flex mx-2 mt-1 max-w-150 space-x-1 text-gray">
                 <span>Stress testing <span class="text-cyan font-bold">$domain</span></span>
                 <span class="flex-1 content-repeat-[―]"></span>
                 <span>$options</span>
