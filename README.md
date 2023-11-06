@@ -157,11 +157,11 @@ Returns the request time to first byte duration in milliseconds.
 
 ```php
 $result->requests()->ttfb()->duration()->avg();
-                                      // ->min();
-                                      // ->med();    
-                                      // ->max();
-                                      // ->p90();
-                                      // ->p95();
+                                    // ->min();
+                                    // ->med();    
+                                    // ->max();
+                                    // ->p90();
+                                    // ->p95();
 ```
 
 ### Requests DNS Lookup Duration
