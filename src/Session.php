@@ -47,6 +47,7 @@ final readonly class Session
         if (file_exists($this->progressPath())) {
             unlink($this->progressPath());
         }
+
         if (file_exists($this->summaryPath())) {
             unlink($this->summaryPath());
         }
@@ -66,13 +67,5 @@ final readonly class Session
     public function duration(): int
     {
         return $this->duration;
-    }
-
-    /**
-     * Destroys the session instance.
-     */
-    public function __destruct()
-    {
-        $this->clean();
     }
 }

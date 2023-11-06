@@ -13,15 +13,23 @@ use Symfony\Component\Process\Process;
 /**
  * @internal
  */
-final readonly class Run
+final class Run
 {
+    /**
+     * The sessions instance, if any.
+     */
+    private ?Session $session = null;
+
     /**
      * Creates a new run instance.
      *
      * @param  array{stages: array{0: array{duration: string, target: int}}}  $options
      */
-    public function __construct(private Url $url, private array $options, private bool $verbose)
-    {
+    public function __construct(
+        readonly private Url $url,
+        readonly private array $options,
+        readonly private bool $verbose
+    ) {
         //
     }
 
@@ -33,7 +41,7 @@ final readonly class Run
         $concurrency = $this->options['stages'][0]['target'];
         $duration = (int) $this->options['stages'][0]['duration'];
 
-        $session = new Session(
+        $this->session = new Session(
             $basePath = dirname(__DIR__),
             uniqid('pest', true),
             $concurrency,
@@ -41,17 +49,17 @@ final readonly class Run
         );
 
         $process = new Process([
-            Binary::k6(), 'run', 'run.js', '--out', "json={$session->progressPath()}",
+            Binary::k6(), 'run', 'run.js', '--out', "json={$this->session->progressPath()}",
         ], $basePath.'/bin', [
             'PEST_STRESS_TEST_OPTIONS' => json_encode($this->options, JSON_THROW_ON_ERROR),
             'PEST_STRESS_TEST_URL' => $this->url,
-            'PEST_STRESS_TEST_SUMMARY_PATH' => $session->summaryPath(),
+            'PEST_STRESS_TEST_SUMMARY_PATH' => $this->session->summaryPath(),
         ]);
 
         $process->start();
 
         if ($this->verbose) {
-            (new Progress($process, $session, $this->url))->tail();
+            (new Progress($process, $this->session, $this->url))->tail();
         }
 
         $process->wait();
@@ -62,7 +70,7 @@ final readonly class Run
             );
         }
 
-        $summary = file_get_contents($session->summaryPath());
+        $summary = file_get_contents($this->session->summaryPath());
         assert(is_string($summary));
 
         $metrics = json_decode($summary, true, 512, JSON_THROW_ON_ERROR);
@@ -76,8 +84,18 @@ final readonly class Run
             $detail->print($result);
         }
 
-        $session->clean();
+        $this->session->clean();
+
+        $this->session = null;
 
         return $result;
+    }
+
+    /**
+     * Destroys the factory instdance instance.
+     */
+    public function __destruct()
+    {
+        $this->session?->clean();
     }
 }
