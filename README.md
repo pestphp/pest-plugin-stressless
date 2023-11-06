@@ -13,7 +13,7 @@ Pest is an open-sourced software licensed under the **[MIT license](https://open
 # Stress Testing
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/pest/pest-plugin-stressless/2.x/art/banner.png" width="600" alt="PEST">
+    <img src="https://pestphp.com/assets/img/stressless-banner.png" width="600" alt="PEST">
 </p>
 
 **Source code**: [github.com/pestphp/pest-plugin-stressless](https://github.com/pestphp/pest-plugin-stressless)
@@ -62,7 +62,7 @@ You may want to be mindful of the number of concurrent requests you configure. I
 Once the stress test is completed, Pest will display a summary of the stress test result, which includes the following metrics:
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/pest/pest-plugin-stressless/2.x/art/results.png" width="600" alt="PEST">
+    <img src="https://pestphp.com/assets/img/stressless-results.png" width="600" alt="PEST">
 </p>
 
 ## The `stress()` function
