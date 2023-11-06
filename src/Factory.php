@@ -107,6 +107,8 @@ final class Factory
             'target' => $this->concurrency,
         ]];
 
+        $this->options['throw'] = true;
+
         $this->running = true;
 
         return $this->result ??= ((new Run(
