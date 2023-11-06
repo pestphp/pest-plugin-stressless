@@ -45,11 +45,11 @@ final class Plugin implements HandlesArguments
 
         $domain = $arguments[2];
 
-        $duration = 10;
+        $run = stress($domain);
 
         foreach ($arguments as $argument) {
             if (str_starts_with($argument, '--duration=')) {
-                $duration = (int) str_replace('--duration=', '', $argument);
+                $run->duration((int) str_replace('--duration=', '', $argument));
             }
         }
 
@@ -57,14 +57,10 @@ final class Plugin implements HandlesArguments
 
         foreach ($arguments as $argument) {
             if (str_starts_with($argument, '--concurrency=')) {
-                $concurrency = (int) str_replace('--concurrency=', '', $argument);
+                $run->concurrently((int) str_replace('--concurrency=', '', $argument));
             }
         }
 
-        stress($domain)
-            ->concurrently($concurrency)
-            ->for($duration)
-            ->seconds()
-            ->dd();
+        $run->dd();
     }
 }
