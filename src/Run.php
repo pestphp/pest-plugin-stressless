@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pest\Stressless;
 
 use Pest\Exceptions\ShouldNotHappen;
+use Pest\Stressless\Binaries\K6;
 use Pest\Stressless\Printers\Detail;
 use Pest\Stressless\Printers\Progress;
 use RuntimeException;
@@ -49,7 +50,7 @@ final class Run
         );
 
         $process = new Process([
-            Binary::k6(), 'run', 'run.js', '--out', "json={$this->session->progressPath()}",
+            K6::new(), 'run', 'run.js', '--out', "json={$this->session->progressPath()}",
         ], $basePath.'/bin', [
             'PEST_STRESS_TEST_OPTIONS' => json_encode($this->options, JSON_THROW_ON_ERROR),
             'PEST_STRESS_TEST_URL' => $this->url,
