@@ -7,6 +7,7 @@ namespace Pest\Stressless;
 use Pest\Exceptions\ShouldNotHappen;
 use Pest\Stressless\Binaries\K6;
 use Pest\Stressless\Printers\Detail;
+use Pest\Stressless\Printers\Info;
 use Pest\Stressless\Printers\Progress;
 use RuntimeException;
 use Symfony\Component\Process\Process;
@@ -48,6 +49,12 @@ final class Run
             $concurrency,
             $duration,
         );
+
+        if(!K6::exists()) {
+            $info = new Info();
+            $info->print("First run...<br>Downloading needed binary...");
+            K6::download();
+        }
 
         $process = new Process([
             K6::new(), 'run', 'run.js', '--out', "json={$this->session->progressPath()}",
