@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Pest\Stressless\Binaries\K6;
+use Pest\Stressless\K6;
 
 it('infers the path from the environment on mac OS', function (): void {
-    $binary = K6::new();
+    $binary = K6::make();
 
     $arch = str_contains(php_uname('m'), 'arm') ? 'arm64' : 'amd64';
 
@@ -13,7 +13,7 @@ it('infers the path from the environment on mac OS', function (): void {
 })->skipOnLinux()->skipOnWindows();
 
 it('infers the path from the environment on Linux', function (): void {
-    $binary = K6::new();
+    $binary = K6::make();
 
     $arch = str_contains(php_uname('m'), 'arm') ? 'arm64' : 'amd64';
 

@@ -1,4 +1,6 @@
-/bin/summary.json
+/bin/k6*
+/bin/*_summary.json
+/bin/*_progress.json
 .idea/*
 .idea/codeStyleSettings.xml
 composer.lock

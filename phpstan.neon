@@ -15,4 +15,3 @@ parameters:
     ignoreErrors:
         - "#Undefined variable: \\$this#"
         - "#Short ternary operator is not allowed#"
-        - "#Class \"Pest\\\\Stressless\\\\Binaries\\\\K6\" is not allowed to extend \"Pest\\\\Stressless\\\\Contracts\\\\Binary\"#"
