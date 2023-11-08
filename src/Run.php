@@ -7,10 +7,13 @@ namespace Pest\Stressless;
 use Pest\Exceptions\ShouldNotHappen;
 use Pest\Stressless\Printers\Detail;
 use Pest\Stressless\Printers\Progress;
+use Pest\Support\Container;
 use RuntimeException;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
 use function Termwind\render;
+use function Termwind\renderUsing;
 
 /**
  * @internal
@@ -40,6 +43,10 @@ final class Run
      */
     public function start(): Result
     {
+        renderUsing(
+            Container::getInstance()->get(OutputInterface::class)
+        );
+
         $concurrency = $this->options['stages'][0]['target'];
         $duration = (int) $this->options['stages'][0]['duration'];
 

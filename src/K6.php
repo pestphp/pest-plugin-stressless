@@ -135,7 +135,7 @@ final readonly class K6 implements Stringable
      */
     private static function arch(): string
     {
-        if(self::os() === 'windows') {
+        if (self::os() === 'windows') {
             return 'amd64';
         }
 
