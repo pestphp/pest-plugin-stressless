@@ -10,6 +10,8 @@ use Pest\Stressless\Printers\Progress;
 use RuntimeException;
 use Symfony\Component\Process\Process;
 
+use function Termwind\render;
+
 /**
  * @internal
  */
@@ -48,8 +50,19 @@ final class Run
             $duration,
         );
 
+        if (! K6::exists()) {
+            render(<<<'HTML'
+                <div class="mx-2 mt-1">
+                    <span class="bg-cyan font-bold px-1 mr-1">INFO</span>
+                    <span class="font-bold">Hang tight — we're setting things up for your first stress test!</span>
+                </div>
+            HTML);
+
+            K6::download();
+        }
+
         $process = new Process([
-            Binary::k6(), 'run', 'run.js', '--out', "json={$this->session->progressPath()}",
+            K6::make(), 'run', 'run.js', '--out', "json={$this->session->progressPath()}",
         ], $basePath.'/bin', [
             'PEST_STRESS_TEST_OPTIONS' => json_encode($this->options, JSON_THROW_ON_ERROR),
             'PEST_STRESS_TEST_URL' => $this->url,

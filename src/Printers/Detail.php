@@ -7,7 +7,6 @@ namespace Pest\Stressless\Printers;
 use Pest\Stressless\Result;
 
 use function Termwind\render;
-use function Termwind\terminal;
 
 /**
  * @internal
@@ -31,17 +30,19 @@ final readonly class Detail
         $color = $this->color($result->requests->dnsLookup->duration->avg, 20.0, 50.0, 100.0);
         $value = $this->ms($result->requests->dnsLookup->duration->avg);
 
-        // map all IPv4 and IPv6 addresses of the given domain
         $domain = $result->url();
         $domain = (string) parse_url($domain, PHP_URL_HOST);
         $dnsRecords = dns_get_record($domain, DNS_AAAA + DNS_A);
         $dnsRecords = array_map(fn (array $record): string => $record['ipv6'] ?? $record['ip'], $dnsRecords ?: []);
         $dnsRecords = array_unique($dnsRecords);
-        $dnsRecords = implode(', ', $dnsRecords);
 
-        if (strlen($dnsRecords) > 0 && strlen($dnsRecords) > ($size = terminal()->width() - 30)) {
-            $dnsRecords = substr($dnsRecords, 0, $size).'(…)';
+        if (count($dnsRecords) > 2) {
+            $lastDnsRecord = '(+ '.(count($dnsRecords) - 2).' more)';
+            $dnsRecords = array_slice($dnsRecords, 0, 2);
+            $dnsRecords[] = $lastDnsRecord;
         }
+
+        $dnsRecords = implode(', ', $dnsRecords);
 
         $this->twoColumnDetail('DNS Lookup Duration', <<<HTML
             <span class="text-gray mr-1">$dnsRecords</span>

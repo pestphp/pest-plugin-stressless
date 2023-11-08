@@ -15,7 +15,8 @@
         "php": "^8.2",
         "pestphp/pest": "^2.24.2",
         "pestphp/pest-plugin": "^2.1.1",
-        "ext-curl": "*"
+        "ext-curl": "*",
+        "ext-zip": "*"
     },
     "autoload": {
         "psr-4": {
