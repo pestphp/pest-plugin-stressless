@@ -131,10 +131,14 @@ final readonly class K6 implements Stringable
     }
 
     /**
-     * Returns the computer's architecture.
+     * Returns the computer's architecture. Force amd64 on windows
      */
     private static function arch(): string
     {
+        if(self::os() === 'windows') {
+            return 'amd64';
+        }
+
         return str_contains(php_uname('m'), 'arm') ? 'arm64' : 'amd64';
     }
 
