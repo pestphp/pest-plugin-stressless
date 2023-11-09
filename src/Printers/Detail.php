@@ -27,8 +27,8 @@ final readonly class Detail
 
         $this->overview($result);
 
-        $color = $this->color($result->requests->dnsLookup->duration->avg, 20.0, 50.0, 100.0);
-        $value = $this->ms($result->requests->dnsLookup->duration->avg);
+        $color = $this->color($result->requests->dnsLookup->duration->med, 20.0, 50.0, 100.0);
+        $value = $this->ms($result->requests->dnsLookup->duration->med);
 
         $domain = $result->url();
         $domain = (string) parse_url($domain, PHP_URL_HOST);
@@ -49,20 +49,22 @@ final readonly class Detail
             <span class="$color">$value</span>
         HTML);
 
-        $color = $this->color($result->requests->tlsHandshake->duration->avg, 20.0, 50.0, 100.0);
-        $value = $this->ms($result->requests->tlsHandshake->duration->avg);
+        $color = $this->color($result->requests->tlsHandshake->duration->med, 20.0, 50.0, 100.0);
+        $value = $this->ms($result->requests->tlsHandshake->duration->med);
         $this->twoColumnDetail('TLS Handshake Duration', <<<HTML
             <span class="$color">$value</span>
         HTML);
 
-        $color = $this->color($result->requests->duration->avg, 100.0, 300.0, 1000.0);
+        $total = $result->requests->duration->med;
+        $color = $this->color($total, 100.0, 300.0, 1000.0);
+
         $this->twoColumnDetail(
             'Request Duration',
-            '<span class="'.$color.'">'.$this->ms($total = $result->requests->duration->avg).'</span>'
+            '<span class="'.$color.'">'.$this->ms($total).'</span>'
         );
 
-        $color = $this->color($result->requests->upload->duration->avg, 50.0, 150.0, 250.0);
-        $value = $result->requests->upload->duration->avg;
+        $color = $this->color($result->requests->upload->duration->med, 50.0, 150.0, 250.0);
+        $value = $result->requests->upload->duration->med;
         $percentage = $total === 0.0 ? 0.0 : ($value * 100.0 / $total);
         $percentage = sprintf('%4.1f', $percentage);
         $value = $this->ms($value);
@@ -82,8 +84,8 @@ final readonly class Detail
             <span class="$color">$value</span>
         HTML);
 
-        $color = $this->color($result->requests->ttfb->duration->avg, 50.0, 150.0, 400.0);
-        $value = $result->requests->ttfb->duration->avg;
+        $color = $this->color($result->requests->ttfb->duration->med, 50.0, 150.0, 400.0);
+        $value = $result->requests->ttfb->duration->med;
         $percentage = $total === 0.0 ? 0.0 : ($value * 100.0 / $total);
         $percentage = sprintf('%4.1f', $percentage);
         $value = $this->ms($value);
@@ -93,8 +95,8 @@ final readonly class Detail
             <span class="ml-1 text-gray">$percentage % — including server processing time</span>
         HTML, "<span class=\"$color\">$value</span>");
 
-        $color = $this->color($result->requests->download->duration->avg, 100.0, 300.0, 1000.0);
-        $value = $result->requests->download->duration->avg;
+        $color = $this->color($result->requests->download->duration->med, 100.0, 300.0, 1000.0);
+        $value = $result->requests->download->duration->med;
         $percentage = $total === 0.0 ? 0.0 : ($value * 100.0 / $total);
         $percentage = sprintf('%4.1f', $percentage);
         $value = $this->ms($value);

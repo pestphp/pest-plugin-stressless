@@ -65,13 +65,14 @@ final readonly class Progress
         /** @var array<int, array{data: array{time: string, value: float}}> $points */
         $points = [];
         $buffer = '';
+        $currentTime = '';
         $lastTime = '';
 
         while ($this->process->isRunning()) {
-            $this->fetch($tail, $points, $buffer, $lastTime);
+            $this->fetch($tail, $points, $buffer, $currentTime, $lastTime);
         }
 
-        $this->fetch($tail, $points, $buffer, $lastTime);
+        $this->fetch($tail, $points, $buffer, $currentTime, $lastTime);
     }
 
     /**
@@ -79,7 +80,7 @@ final readonly class Progress
      *
      * @param  array<int, array{data: array{time: string, value: float}}>  $points
      */
-    private function fetch(Process $tail, array &$points, string &$buffer, string &$lastTime): void
+    private function fetch(Process $tail, array &$points, string &$buffer, string &$currentTime, string &$lastTime): void
     {
         $output = trim($tail->getIncrementalOutput());
 
@@ -102,7 +103,6 @@ final readonly class Progress
                     $currentTime = substr($point['data']['time'], 0, 19);
                     if ($lastTime !== $currentTime) {
                         $this->printCurrentPoints($points);
-                        $points = [];
 
                         $lastTime = $currentTime;
                     }
@@ -128,23 +128,24 @@ final readonly class Progress
         static $maxResponseTime;
 
         if ($points !== []) {
-            $average = array_sum(array_map(fn ($point): float => $point['data']['value'], $points)) / count($points);
+            $values = array_map(fn ($point): float => $point['data']['value'], $points);
+            $median = $this->median($values);
 
-            $time = substr($points[0]['data']['time'], 11, 8);
+            $time = substr($points[count($points) - 1]['data']['time'], 11, 8);
 
             $width = max(0, terminal()->width());
             $width = $width - 4 - strlen($time);
 
             if ($maxResponseTime === null) {
-                $maxResponseTime = max($average * 3, 1000);
+                $maxResponseTime = max($median * 3, 1000);
             }
 
-            $greenDots = (int) (($average * $width) / $maxResponseTime);
+            $greenDots = (int) (($median * $width) / $maxResponseTime);
 
-            $greenDots = min($greenDots, 150 - 23);
+            $greenDots = min($greenDots, min(150, terminal()->width()) - 23);
             $greenDots = str_repeat('▉', $greenDots);
 
-            $average = sprintf('%4.2f', $average);
+            $median = sprintf('%4.2f', $median);
 
             render(<<<HTML
                 <div class="flex justify-between mx-2 max-w-150 text-gray">
@@ -152,9 +153,33 @@ final readonly class Progress
                         <span>{$time}</span>
                         <span class="ml-1">{$greenDots}</span>
                     </span>
-                    <span class="ml-1">{$average}ms</span>
+                    <span class="ml-1">{$median}ms</span>
                 </div>
             HTML);
         }
+    }
+
+    /**
+     * Calculates the median.
+     *
+     * @param  array<int, float>  $values
+     */
+    private function median(array $values): float
+    {
+        $count = count($values);
+
+        if ($count === 0) {
+            return 0.0;
+        }
+
+        sort($values);
+
+        $middle = (int) floor(($count - 1) / 2);
+
+        if ($count % 2 === 1) {
+            return $values[$middle];
+        }
+
+        return ($values[$middle] + $values[$middle + 1]) / 2.0;
     }
 }
