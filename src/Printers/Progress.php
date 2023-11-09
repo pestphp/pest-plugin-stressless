@@ -64,45 +64,58 @@ final readonly class Progress
 
         /** @var array<int, array{data: array{time: string, value: float}}> $points */
         $points = [];
-
         $buffer = '';
-        $lastTime = null;
+        $lastTime = '';
+
         while ($this->process->isRunning()) {
-            $output = trim($tail->getIncrementalOutput());
+            $this->fetch($tail, $points, $buffer, $lastTime);
+        }
 
-            if ($output === '') {
-                continue;
-            }
+        $this->fetch($tail, $points, $buffer, $lastTime);
+    }
 
-            $output = $buffer.$output;
-            $buffer = '';
+    /**
+     * Fetches the tail output.
+     *
+     * @param  array<int, array{data: array{time: string, value: float}}>  $points
+     */
+    private function fetch(Process $tail, array &$points, string &$buffer, string &$lastTime): void
+    {
+        $output = trim($tail->getIncrementalOutput());
 
-            $lines = explode("\n", $output);
+        if ($output === '') {
+            return;
+        }
 
-            foreach ($lines as $line) {
-                if (str_starts_with($line, '{"metric":"http_req_duration","type":"Point"')) {
-                    try {
-                        /** @var array{data: array{time: string, value: float}}|null $point */
-                        $point = json_decode($line, true, 512, JSON_THROW_ON_ERROR);
-                        assert(is_array($point));
+        $output = $buffer.$output;
+        $buffer = '';
 
-                        $currentTime = substr($point['data']['time'], 0, 19);
-                        if ($lastTime !== $currentTime) {
-                            $this->printCurrentPoints($points);
-                            $points = [];
+        $lines = explode("\n", $output);
 
-                            $lastTime = $currentTime;
-                        }
+        foreach ($lines as $line) {
+            if (str_starts_with($line, '{"metric":"http_req_duration","type":"Point"')) {
+                try {
+                    /** @var array{data: array{time: string, value: float}}|null $point */
+                    $point = json_decode($line, true, 512, JSON_THROW_ON_ERROR);
+                    assert(is_array($point));
 
-                        $points[] = $point;
-                    } catch (JsonException) {
-                        $buffer .= $line;
+                    $currentTime = substr($point['data']['time'], 0, 19);
+                    if ($lastTime !== $currentTime) {
+                        $this->printCurrentPoints($points);
+                        $points = [];
+
+                        $lastTime = $currentTime;
                     }
+
+                    $points[] = $point;
+                } catch (JsonException) {
+                    $buffer .= $line;
                 }
             }
-
-            usleep(100000); // 100ms
         }
+
+        usleep(10000); // 10ms
+
     }
 
     /**
@@ -128,6 +141,7 @@ final readonly class Progress
 
             $greenDots = (int) (($average * $width) / $maxResponseTime);
 
+            $greenDots = min($greenDots, 150 - 23);
             $greenDots = str_repeat('▉', $greenDots);
 
             $average = sprintf('%4.2f', $average);

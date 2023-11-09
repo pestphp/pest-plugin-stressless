@@ -28,7 +28,7 @@ final class Run
     /**
      * Creates a new run instance.
      *
-     * @param  array{stages: array{0: array{duration: string, target: int}}}  $options
+     * @param  array{vus: int, duration: string}  $options
      */
     public function __construct(
         readonly private Url $url,
@@ -43,12 +43,12 @@ final class Run
      */
     public function start(): Result
     {
-        renderUsing(
-            Container::getInstance()->get(OutputInterface::class)
-        );
+        $output = Container::getInstance()->get(OutputInterface::class);
+        assert($output instanceof OutputInterface);
+        renderUsing($output);
 
-        $concurrency = $this->options['stages'][0]['target'];
-        $duration = (int) $this->options['stages'][0]['duration'];
+        $concurrency = $this->options['vus'];
+        $duration = (int) $this->options['duration'];
 
         $this->session = new Session(
             $basePath = dirname(__DIR__),

@@ -33,10 +33,8 @@ final class Factory
 
     /**
      * Creates a new instance of the run factory.
-     *
-     * @param  array{stages: array<int, array{duration: string, target: int}>}  $options
      */
-    private function __construct(private readonly string $url, private array $options)
+    private function __construct(private readonly string $url)
     {
         //
     }
@@ -46,7 +44,7 @@ final class Factory
      */
     public static function make(string $url): self
     {
-        return new self($url, ['stages' => []]);
+        return new self($url);
     }
 
     /**
@@ -98,16 +96,13 @@ final class Factory
             return $this->result;
         }
 
-        $this->options['stages'] = [[
-            'duration' => sprintf('%ds', $this->duration),
-            'target' => $this->concurrency,
-        ]];
-
-        $this->options['throw'] = true;
-
         return $this->result = ((new Run(
             new Url($this->url),
-            $this->options,
+            [
+                'vus' => $this->concurrency,
+                'duration' => sprintf('%ds', $this->duration),
+                'throw' => true,
+            ],
             $this->verbose,
         ))->start());
     }
