@@ -56,6 +56,18 @@ In addition, the number of concurrent requests will be `1`. However, you may als
 ./vendor/bin/pest stress example.com --concurrency=5
 ```
 
+You can choose to use GET or POST requests using the `--method` option:
+
+```bash
+./vendor/bin/pest stress example.com --method=POST
+```
+
+You can choose to use a custom payload using the `--payload` option:
+
+```bash
+./vendor/bin/pest stress example.com --method=POST --payload='{"name": "Nuno"}'
+```
+
 The concurrency value represents the number of concurrent requests that will be made to the given URL. For example, if you set the concurrency to `5`, Pest will **constantly make 5 concurrent requests** to the given URL until the stress test duration is reached.
 
 You may want to be mindful of the number of concurrent requests you configure. If you configure too many concurrent requests, you may overwhelm your application, server or hit rate limits / firewalls.
