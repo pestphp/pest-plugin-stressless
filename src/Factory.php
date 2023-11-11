@@ -27,6 +27,16 @@ final class Factory
     private int $duration = 5;
 
     /**
+     * The HTTP method to use.
+     */
+    private string $method = 'get';
+
+    /**
+     * The payload to send.
+     */
+    private array $payload = [];
+
+    /**
      * The computed result, if any.
      */
     private ?Result $result = null;
@@ -55,6 +65,31 @@ final class Factory
         assert($seconds > 0, 'The duration must be greater than 0 seconds.');
 
         $this->duration = $seconds;
+
+        return $this;
+    }
+
+    /**
+     * Specifies that the test should be run using the given HTTP method.
+     */
+    public function method(string $method): self
+    {
+        $method = strtolower($method);
+
+        assert(in_array($method, ['get', 'post'], true), 'The method must be one of: get, post');
+
+        $this->method = $method;
+
+        return $this;
+    }
+
+    /**
+     * Specifies the payload to send for the test, if any.
+     * @param  array<string, mixed>  $payload
+     */
+    public function payload(array $payload): self
+    {
+        $this->payload = $payload;
 
         return $this;
     }
@@ -101,6 +136,8 @@ final class Factory
             [
                 'vus' => $this->concurrency,
                 'duration' => sprintf('%ds', $this->duration),
+                'method' => $this->method,
+                'payload' => $this->payload,
                 'throw' => true,
             ],
             $this->verbose,
