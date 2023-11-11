@@ -51,9 +51,7 @@ final class Plugin implements HandlesArguments
             if (str_starts_with($argument, '--duration=')) {
                 $run->duration((int) str_replace('--duration=', '', $argument));
             }
-        }
 
-        foreach ($arguments as $argument) {
             if (str_starts_with($argument, '--concurrency=')) {
                 $run->concurrently((int) str_replace('--concurrency=', '', $argument));
             }
