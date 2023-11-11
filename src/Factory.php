@@ -33,6 +33,7 @@ final class Factory
 
     /**
      * The payload to send.
+     * @var array<string, mixed>
      */
     private array $payload = [];
 
