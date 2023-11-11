@@ -108,6 +108,18 @@ In addition, the number of concurrent requests will be 1. However, you may also 
 $result = stress('example.com')->concurrently(requests: 2)->for(5)->seconds();
 ```
 
+You can choose to use GET or POST requests using the `method()` method:
+
+```php
+$result = stress('example.com')->method('POST')->for(5)->seconds();
+```
+
+You can choose to use a custom payload using the `payload()` method:
+
+```php
+$result = stress('example.com')->method('POST')->payload(['name' => 'Nuno'])->for(5)->seconds();
+```
+
 At any time, you may `dd` the stress test result to see its details like if you were using the `stress` command):
 
 ```php
