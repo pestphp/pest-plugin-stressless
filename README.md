@@ -62,6 +62,14 @@ You can choose to use GET or POST requests using the `--method` option:
 ./vendor/bin/pest stress example.com --method=POST
 ```
 
+In addition to the `--method` option, also `--get` and `--post` shortcuts are provided:
+
+```bash
+./vendor/bin/pest stress example.com --get
+# OR
+./vendor/bin/pest stress example.com --post
+```
+
 You can choose to use a custom payload using the `--payload` option:
 
 ```bash
@@ -114,10 +122,18 @@ You can choose to use GET or POST requests using the `method()` method:
 $result = stress('example.com')->method('POST')->for(5)->seconds();
 ```
 
+Alternatively you can use the `get()` and `post()` shortcuts:
+
+```php
+$result = stress('example.com')->post()->for(5)->seconds();
+```
+
 You can choose to use a custom payload using the `payload()` method:
 
 ```php
 $result = stress('example.com')->method('POST')->payload(['name' => 'Nuno'])->for(5)->seconds();
+// or
+$result = stress('example.com')->post()->payload(['name' => 'Nuno'])->for(5)->seconds();
 ```
 
 At any time, you may `dd` the stress test result to see its details like if you were using the `stress` command):
