@@ -60,6 +60,14 @@ final class Plugin implements HandlesArguments
                 $run->method(str_replace('--method=', '', $argument));
             }
 
+            if ($argument === '--get') {
+                $run->get();
+            }
+
+            if($argument === '--post') {
+                $run->post();
+            }
+
             if (str_starts_with($argument, '--payload=')) {
                 try {
                     $payload = json_decode(str_replace('--payload=', '', $argument),

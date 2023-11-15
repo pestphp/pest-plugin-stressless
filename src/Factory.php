@@ -85,6 +85,22 @@ final class Factory
     }
 
     /**
+     * Force the test to use get method
+     */
+    public function get(): self
+    {
+        return $this->method('get');
+    }
+
+    /**
+     * Force the test to use post method
+     */
+    public function post(): self
+    {
+        return $this->method('post');
+    }
+
+    /**
      * Specifies the payload to send for the test, if any.
      * @param  array<string, mixed>  $payload
      */
