@@ -33,6 +33,7 @@ final class Factory
 
     /**
      * The payload to send.
+     *
      * @var array<string, mixed>
      */
     private array $payload = [];
@@ -102,6 +103,7 @@ final class Factory
 
     /**
      * Specifies the payload to send for the test, if any.
+     *
      * @param  array<string, mixed>  $payload
      */
     public function payload(array $payload): self

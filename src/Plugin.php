@@ -64,7 +64,7 @@ final class Plugin implements HandlesArguments
                 $run->get();
             }
 
-            if($argument === '--post') {
+            if ($argument === '--post') {
                 $run->post();
             }
 
@@ -75,8 +75,8 @@ final class Plugin implements HandlesArguments
                 } catch (\JsonException $e) {
                     View::render('components.badge', [
                         'type' => 'ERROR',
-                        'content' => 'Invalid JSON payload. Please provide a valid JSON payload.' .
-                            'Example: --payload=\'{"name": "Nuno"}\''
+                        'content' => 'Invalid JSON payload. Please provide a valid JSON payload.'.
+                            'Example: --payload=\'{"name": "Nuno"}\'',
                     ]);
 
                     exit(0);
