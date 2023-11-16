@@ -162,9 +162,9 @@ final readonly class Detail
         $successRateColor = 'red';
         if ($successRate > 99) {
             $successRateColor = 'green';
-        } else if ($successRate > 75) {
+        } elseif ($successRate > 75) {
             $successRateColor = 'yellow';
-        } else if ($successRate > 50) {
+        } elseif ($successRate > 50) {
             $successRateColor = 'orange';
         }
 
