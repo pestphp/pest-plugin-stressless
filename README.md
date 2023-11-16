@@ -2,7 +2,7 @@
     <img src="https://pestphp.com/assets/img/stressless-banner.png" width="600" alt="PEST">
 </p>
 
-This repository contains the Pest Plugin Stresless.
+This repository contains the Pest Plugin Stressless.
 
 > If you want to start testing your application with Pest, visit the main **[Pest Repository](https://github.com/pestphp/pest)**.
 
