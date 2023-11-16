@@ -1,5 +1,7 @@
 <p align="center">
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/SaMoPZwdOCY?si=aob7pAFyDDZcNx-M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    <a href="https://youtu.be/SaMoPZwdOCY" target="_blank">
+        <img src="https://picperf.io/https://laravelnews.s3.amazonaws.com/featured-images/stressless-featured.jpg" alt="Watch the video" border="10" />
+    </a>
 </p>
 
 This repository contains the Pest Plugin Stressless.
