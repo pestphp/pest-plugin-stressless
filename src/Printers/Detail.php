@@ -160,16 +160,12 @@ final readonly class Detail
         $successRateAsString = sprintf('%4.1f', $successRate);
 
         $successRateColor = 'red';
-        switch (true) {
-            case $successRate > 99:
-                $successRateColor = 'green';
-                break;
-            case $successRate > 75:
-                $successRateColor = 'yellow';
-                break;
-            case $successRate > 50:
-                $successRateColor = 'orange';
-                break;
+        if ($successRate > 99) {
+            $successRateColor = 'green';
+        } else if ($successRate > 75) {
+            $successRateColor = 'yellow';
+        } else if ($successRate > 50) {
+            $successRateColor = 'orange';
         }
 
         $this->twoColumnDetail('Success Rate', <<<HTML
