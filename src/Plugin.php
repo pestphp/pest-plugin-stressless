@@ -70,7 +70,7 @@ final class Plugin implements HandlesArguments
 
             if (str_starts_with($argument, '--payload=')) {
                 try {
-                    $payload = json_decode(str_replace('--payload=', '', $argument),
+                    $payload = (array) json_decode(str_replace('--payload=', '', $argument),
                         true, 512, JSON_THROW_ON_ERROR);
                 } catch (\JsonException $e) {
                     View::render('components.badge', [
