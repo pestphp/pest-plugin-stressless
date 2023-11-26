@@ -72,42 +72,23 @@ final class Factory
     }
 
     /**
-     * Specifies that the test should be run using the given HTTP method.
+     * Force the test to use get method
      */
-    public function method(string $method): self
+    public function get(): self
     {
-        $method = strtolower($method);
-
-        assert(in_array($method, ['get', 'post'], true), 'The method must be one of: get, post');
-
-        $this->method = $method;
+        $this->method = 'get';
 
         return $this;
     }
 
     /**
-     * Force the test to use get method
-     */
-    public function get(): self
-    {
-        return $this->method('get');
-    }
-
-    /**
      * Force the test to use post method
-     */
-    public function post(): self
-    {
-        return $this->method('post');
-    }
-
-    /**
-     * Specifies the payload to send for the test, if any.
      *
-     * @param  array<string, mixed>  $payload
+     * @param  array<string, mixed>  $payload The payload to send with the POST request
      */
-    public function payload(array $payload): self
+    public function post(array $payload): self
     {
+        $this->method = 'post';
         $this->payload = $payload;
 
         return $this;

@@ -56,23 +56,15 @@ final class Plugin implements HandlesArguments
                 $run->concurrently((int) str_replace('--concurrency=', '', $argument));
             }
 
-            if (str_starts_with($argument, '--method=')) {
-                $run->method(str_replace('--method=', '', $argument));
-            }
-
             if ($argument === '--get') {
                 $run->get();
             }
 
-            if ($argument === '--post') {
-                $run->post();
-            }
-
-            if (str_starts_with($argument, '--payload=')) {
+            if (str_starts_with($argument, '--post=')) {
                 try {
-                    $payload = (array) json_decode(str_replace('--payload=', '', $argument),
+                    $payload = (array) json_decode(str_replace('--post=', '', $argument),
                         true, 512, JSON_THROW_ON_ERROR);
-                } catch (\JsonException $e) {
+                } catch (\JsonException) {
                     View::render('components.badge', [
                         'type' => 'ERROR',
                         'content' => 'Invalid JSON payload. Please provide a valid JSON payload.'.
@@ -81,7 +73,7 @@ final class Plugin implements HandlesArguments
 
                     exit(0);
                 }
-                $run->payload($payload);
+                $run->post($payload);
             }
         }
 
