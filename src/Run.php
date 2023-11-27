@@ -28,7 +28,7 @@ final class Run
     /**
      * Creates a new run instance.
      *
-     * @param  array{vus: int, duration: string}  $options
+     * @param  array{vus: int, duration: string, method: string, payload: array<string, mixed>, throw: boolean}  $options
      */
     public function __construct(
         readonly private Url $url,
@@ -71,7 +71,7 @@ final class Run
         $process = new Process([
             K6::make(), 'run', 'run.js', '--out', "json={$this->session->progressPath()}",
         ], $basePath.'/bin', [
-            'PEST_STRESS_TEST_OPTIONS' => json_encode($this->options, JSON_THROW_ON_ERROR),
+            'PEST_STRESS_TEST_OPTIONS' => json_encode($this->options, JSON_FORCE_OBJECT | JSON_THROW_ON_ERROR),
             'PEST_STRESS_TEST_URL' => $this->url,
             'PEST_STRESS_TEST_SUMMARY_PATH' => $this->session->summaryPath(),
         ]);

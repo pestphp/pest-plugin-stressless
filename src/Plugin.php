@@ -51,11 +51,29 @@ final class Plugin implements HandlesArguments
             if (str_starts_with($argument, '--duration=')) {
                 $run->duration((int) str_replace('--duration=', '', $argument));
             }
-        }
 
-        foreach ($arguments as $argument) {
             if (str_starts_with($argument, '--concurrency=')) {
                 $run->concurrently((int) str_replace('--concurrency=', '', $argument));
+            }
+
+            if ($argument === '--get') {
+                $run->get();
+            }
+
+            if (str_starts_with($argument, '--post=')) {
+                try {
+                    $payload = (array) json_decode(str_replace('--post=', '', $argument),
+                        true, 512, JSON_THROW_ON_ERROR);
+                } catch (\JsonException) {
+                    View::render('components.badge', [
+                        'type' => 'ERROR',
+                        'content' => 'Invalid JSON payload. Please provide a valid JSON payload.'.
+                            'Example: --payload=\'{"name": "Nuno"}\'',
+                    ]);
+
+                    exit(0);
+                }
+                $run->post($payload);
             }
         }
 
