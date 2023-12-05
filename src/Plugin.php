@@ -61,22 +61,31 @@ final class Plugin implements HandlesArguments
             }
 
             if (str_starts_with($argument, '--post=')) {
-                try {
-                    $payload = (array) json_decode(str_replace('--post=', '', $argument),
-                        true, 512, JSON_THROW_ON_ERROR);
-                } catch (\JsonException) {
-                    View::render('components.badge', [
-                        'type' => 'ERROR',
-                        'content' => 'Invalid JSON payload. Please provide a valid JSON payload.'.
-                            'Example: --post=\'{"name": "Nuno"}\'',
-                    ]);
-
-                    exit(0);
-                }
-                $run->post($payload);
+                $run->post($this->extractPayload('post', $argument));
             }
         }
 
         $run->dd();
+    }
+
+    /**
+     * Extracts the payload from the argument.
+     *
+     * @return array<string, mixed>
+     */
+    private function extractPayload(string $method, string $argument): array
+    {
+        try {
+            return (array) json_decode(str_replace("--{$method}=", '', $argument),
+                true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            View::render('components.badge', [
+                'type' => 'ERROR',
+                'content' => 'Invalid JSON payload. Please provide a valid JSON payload. '.
+                    "Example: --{$method}='{\"name\": \"Nuno\"}'",
+            ]);
+
+            exit(0);
+        }
     }
 }
