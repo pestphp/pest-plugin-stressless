@@ -56,8 +56,34 @@ final class Plugin implements HandlesArguments
                 $run->concurrently((int) str_replace('--concurrency=', '', $argument));
             }
 
+            if ($argument === '--delete') {
+                $run->delete();
+            }
+
             if ($argument === '--get') {
                 $run->get();
+            }
+
+            if ($argument === '--head') {
+                $run->head();
+            }
+
+            if (str_starts_with($argument, '--options=')) {
+                $run->options($this->extractPayload('options', $argument));
+            } elseif ($argument === '--options') {
+                $run->options();
+            }
+
+            if (str_starts_with($argument, '--patch=')) {
+                $run->patch($this->extractPayload('patch', $argument));
+            } elseif ($argument === '--patch') {
+                $run->patch();
+            }
+
+            if (str_starts_with($argument, '--put=')) {
+                $run->put($this->extractPayload('put', $argument));
+            } elseif ($argument === '--put') {
+                $run->put();
             }
 
             if (str_starts_with($argument, '--post=')) {
