@@ -68,7 +68,7 @@ final class Plugin implements HandlesArguments
                     View::render('components.badge', [
                         'type' => 'ERROR',
                         'content' => 'Invalid JSON payload. Please provide a valid JSON payload.'.
-                            'Example: --payload=\'{"name": "Nuno"}\'',
+                            'Example: --post=\'{"name": "Nuno"}\'',
                     ]);
 
                     exit(0);
