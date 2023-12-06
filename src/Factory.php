@@ -154,6 +154,24 @@ final class Factory
     }
 
     /**
+     * Getter for the method property
+     */
+    public function method(): string
+    {
+        return $this->method;
+    }
+
+    /**
+     * Getter for the payload property
+     *
+     * @return array<string, mixed>
+     */
+    public function payload(): array
+    {
+        return $this->payload;
+    }
+
+    /**
      * Specifies that run should run with the given number of concurrent requests.
      */
     public function concurrency(int $requests): self
