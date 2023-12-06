@@ -56,27 +56,62 @@ final class Plugin implements HandlesArguments
                 $run->concurrently((int) str_replace('--concurrency=', '', $argument));
             }
 
+            if ($argument === '--delete') {
+                $run->delete();
+            }
+
             if ($argument === '--get') {
                 $run->get();
             }
 
-            if (str_starts_with($argument, '--post=')) {
-                try {
-                    $payload = (array) json_decode(str_replace('--post=', '', $argument),
-                        true, 512, JSON_THROW_ON_ERROR);
-                } catch (\JsonException) {
-                    View::render('components.badge', [
-                        'type' => 'ERROR',
-                        'content' => 'Invalid JSON payload. Please provide a valid JSON payload.'.
-                            'Example: --payload=\'{"name": "Nuno"}\'',
-                    ]);
+            if ($argument === '--head') {
+                $run->head();
+            }
 
-                    exit(0);
-                }
-                $run->post($payload);
+            if (str_starts_with($argument, '--options=')) {
+                $run->options($this->extractPayload('options', $argument));
+            } elseif ($argument === '--options') {
+                $run->options();
+            }
+
+            if (str_starts_with($argument, '--patch=')) {
+                $run->patch($this->extractPayload('patch', $argument));
+            } elseif ($argument === '--patch') {
+                $run->patch();
+            }
+
+            if (str_starts_with($argument, '--put=')) {
+                $run->put($this->extractPayload('put', $argument));
+            } elseif ($argument === '--put') {
+                $run->put();
+            }
+
+            if (str_starts_with($argument, '--post=')) {
+                $run->post($this->extractPayload('post', $argument));
             }
         }
 
         $run->dd();
+    }
+
+    /**
+     * Extracts the payload from the argument.
+     *
+     * @return array<string, mixed>
+     */
+    private function extractPayload(string $method, string $argument): array
+    {
+        try {
+            return (array) json_decode(str_replace("--{$method}=", '', $argument),
+                true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            View::render('components.badge', [
+                'type' => 'ERROR',
+                'content' => 'Invalid JSON payload. Please provide a valid JSON payload. '.
+                    "Example: --{$method}='{\"name\": \"Nuno\"}'",
+            ]);
+
+            exit(0);
+        }
     }
 }

@@ -72,11 +72,70 @@ final class Factory
     }
 
     /**
+     *  Force the test to use delete method
+     */
+    public function delete(): self
+    {
+        $this->method = 'delete';
+
+        return $this;
+    }
+
+    /**
      * Force the test to use get method
      */
     public function get(): self
     {
         $this->method = 'get';
+
+        return $this;
+    }
+
+    /**
+     * Force the test to use head method
+     */
+    public function head(): self
+    {
+        $this->method = 'head';
+
+        return $this;
+    }
+
+    /**
+     * Force the test to use options method
+     *
+     * @param  array<string, mixed>  $payload The payload to send with the OPTIONS request
+     */
+    public function options(array $payload = []): self
+    {
+        $this->method = 'options';
+        $this->payload = $payload;
+
+        return $this;
+    }
+
+    /**
+     * Force the test to use patch method
+     *
+     * @param  array<string, mixed>  $payload The payload to send with the PATCH request
+     */
+    public function patch(array $payload = []): self
+    {
+        $this->method = 'patch';
+        $this->payload = $payload;
+
+        return $this;
+    }
+
+    /**
+     * Force the test to use put method
+     *
+     * @param  array<string, mixed>  $payload The payload to send with the PUT request
+     */
+    public function put(array $payload = []): self
+    {
+        $this->method = 'put';
+        $this->payload = $payload;
 
         return $this;
     }
@@ -92,6 +151,24 @@ final class Factory
         $this->payload = $payload;
 
         return $this;
+    }
+
+    /**
+     * Getter for the method property
+     */
+    public function method(): string
+    {
+        return $this->method;
+    }
+
+    /**
+     * Getter for the payload property
+     *
+     * @return array<string, mixed>
+     */
+    public function payload(): array
+    {
+        return $this->payload;
     }
 
     /**
