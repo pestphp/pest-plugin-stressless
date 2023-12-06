@@ -157,13 +157,19 @@ final readonly class Detail
         HTML);
 
         $successRate = (float) ($metrics['http_req_failed']['values']['fails'] * 100 / $metrics['http_reqs']['values']['count']);
-        $successRate = sprintf('%4.1f', $successRate);
-        $successRateColor = $metrics['http_req_failed']['values']['fails'] === $metrics['http_reqs']['values']['count']
-            ? 'green'
-            : 'red';
+        $successRateAsString = sprintf('%4.1f', $successRate);
+
+        $successRateColor = 'red';
+        if ($successRate > 99) {
+            $successRateColor = 'green';
+        } elseif ($successRate > 75) {
+            $successRateColor = 'yellow';
+        } elseif ($successRate > 50) {
+            $successRateColor = 'orange';
+        }
 
         $this->twoColumnDetail('Success Rate', <<<HTML
-            <span class="font-bold text-$successRateColor">$successRate %</span>
+            <span class="font-bold text-$successRateColor">$successRateAsString %</span>
         HTML);
     }
 
