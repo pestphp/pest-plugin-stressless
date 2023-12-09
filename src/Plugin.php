@@ -28,6 +28,14 @@ final class Plugin implements HandlesArguments
      */
     public function handleArguments(array $arguments): array
     {
+        if ($this->hasArgument('--stress', $arguments)) {
+            return $this->pushArgument('--group=stress', $this->popArgument('--stress', $arguments));
+        }
+
+        if ($this->hasArgument('--exclude-stress', $arguments)) {
+            return $this->pushArgument('--exclude-group=stress', $this->popArgument('--exclude-stress', $arguments));
+        }
+
         if (! array_key_exists(1, $arguments)) {
             return $arguments;
         }
