@@ -26,22 +26,22 @@ export default () => {
             });
             break;
         case 'options':
-            http.options(url, Object.keys(payload).length ? JSON.stringify(payload) : null, {
+            http.options(url, Object.keys(payload).length ? payload : null, {
                 headers: { 'user-agent': userAgent },
             });
             break;
         case 'patch':
-            http.patch(url, Object.keys(payload).length ? JSON.stringify(payload) : null, {
+            http.patch(url, Object.keys(payload).length ? payload : null, {
                 headers: { 'user-agent': userAgent },
             });
             break;
         case 'put':
-            http.put(url, Object.keys(payload).length ? JSON.stringify(payload) : null, {
+            http.put(url, Object.keys(payload).length ? payload : null, {
                 headers: { 'user-agent': userAgent },
             });
             break;
         case 'post':
-            http.post(url, JSON.stringify(payload), {
+            http.post(url, payload, {
                 headers: { 'user-agent': userAgent },
             });
             break;
