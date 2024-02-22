@@ -27,22 +27,22 @@ export default () => {
             break;
         case 'options':
             http.options(url, Object.keys(payload).length ? JSON.stringify(payload) : null, {
-                headers: { 'user-agent': userAgent },
+                headers: { 'Content-Type': 'application/json', 'user-agent': userAgent },
             });
             break;
         case 'patch':
             http.patch(url, Object.keys(payload).length ? JSON.stringify(payload) : null, {
-                headers: { 'user-agent': userAgent },
+                headers: { 'Content-Type': 'application/json', 'user-agent': userAgent },
             });
             break;
         case 'put':
             http.put(url, Object.keys(payload).length ? JSON.stringify(payload) : null, {
-                headers: { 'user-agent': userAgent },
+                headers: { 'Content-Type': 'application/json', 'user-agent': userAgent },
             });
             break;
         case 'post':
             http.post(url, JSON.stringify(payload), {
-                headers: { 'user-agent': userAgent },
+                headers: { 'Content-Type': 'application/json', 'user-agent': userAgent },
             });
             break;
     }
