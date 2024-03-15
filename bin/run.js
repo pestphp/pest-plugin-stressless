@@ -42,7 +42,7 @@ export default () => {
             break;
         case 'post':
             http.post(url, JSON.stringify(payload), {
-                headers: { 'user-agent': userAgent },
+                headers: { 'user-agent': userAgent, 'content-type': 'application/json; charset=utf-8' },
             });
             break;
     }
