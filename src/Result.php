@@ -252,7 +252,7 @@ final readonly class Result
      */
     public function __get(string $name): mixed
     {
-        return $this->{$name}(); // @phpstan-ignore-line
+        return $this->{$name}();
     }
 
     /**

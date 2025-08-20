@@ -31,9 +31,9 @@ final class Run
      * @param  array{vus: int, duration: string, method: string, payload: array<string, mixed>, throw: bool}  $options
      */
     public function __construct(
-        readonly private Url $url,
-        readonly private array $options,
-        readonly private bool $verbose
+        private readonly Url $url,
+        private readonly array $options,
+        private readonly bool $verbose
     ) {
         //
     }

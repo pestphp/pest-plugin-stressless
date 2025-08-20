@@ -43,6 +43,6 @@ final readonly class Upload
      */
     public function __get(string $name): mixed
     {
-        return $this->{$name}(); // @phpstan-ignore-line
+        return $this->{$name}();
     }
 }

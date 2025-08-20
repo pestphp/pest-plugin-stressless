@@ -1,14 +1,4 @@
-includes:
-    - vendor/phpstan/phpstan-strict-rules/rules.neon
-    - vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
-
 parameters:
     level: max
     paths:
         - src
-
-    checkMissingIterableValueType: true
-    checkGenericClassInNonGenericObjectType: false
-    reportUnmatchedIgnoredErrors: true
-    ignoreErrors:
-        - "#Short ternary operator is not allowed#"

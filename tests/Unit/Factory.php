@@ -78,7 +78,6 @@ it('correctly sets the headers', function (): void {
 
     $class = new \ReflectionClass($this->stress);
     $protected = $class->getProperty('headers');
-    $protected->setAccessible(true);
 
     $instance = $this->stress;
     $headers = $protected->getValue($instance);

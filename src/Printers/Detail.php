@@ -33,6 +33,7 @@ final readonly class Detail
         $domain = $result->url();
         $domain = (string) parse_url($domain, PHP_URL_HOST);
         $dnsRecords = dns_get_record($domain, DNS_AAAA + DNS_A);
+        // @phpstan-ignore-next-line
         $dnsRecords = array_map(fn (array $record): string => $record['ipv6'] ?? $record['ip'], $dnsRecords ?: []);
         $dnsRecords = array_unique($dnsRecords);
 

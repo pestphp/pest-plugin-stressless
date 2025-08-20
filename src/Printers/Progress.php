@@ -121,14 +121,14 @@ final readonly class Progress
     /**
      * Prints the current points.
      *
-     * @param  array<array{data: array{time: string, value: float}}>  $points
+     * @param  array<int, array{data: array{time: string, value: float}}>  $points
      */
     private function printCurrentPoints(array $points): void
     {
         static $maxResponseTime;
 
         if ($points !== []) {
-            $values = array_map(fn ($point): float => $point['data']['value'], $points);
+            $values = array_map(fn (array $point): float => $point['data']['value'], $points);
             $median = $this->median($values);
 
             $time = substr($points[count($points) - 1]['data']['time'], 11, 8);
@@ -140,6 +140,7 @@ final readonly class Progress
                 $maxResponseTime = max($median * 3, 1000);
             }
 
+            // @phpstan-ignore-next-line
             $greenDots = (int) (($median * $width) / $maxResponseTime);
 
             $greenDots = min($greenDots, min(150, terminal()->width()) - 23);
