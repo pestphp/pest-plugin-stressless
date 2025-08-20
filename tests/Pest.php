@@ -5,7 +5,7 @@ declare(strict_types=1);
 use function Pest\Stressless\stress;
 
 uses()->beforeEach(function (): void {
-    $this->stress = $_SERVER['stress'] ??= stress('example.com')
+    $this->stress = $_SERVER['stress'] ??= stress('laravel.com')
         ->concurrently(2)
         ->for(1)->second();
 
