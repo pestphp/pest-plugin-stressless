@@ -48,6 +48,10 @@ final class Plugin implements HandlesArguments
         $run = stress($domain);
 
         foreach ($arguments as $argument) {
+            if (str_starts_with($argument, '--headers=')) {
+                $run->headers($this->extractPayload('headers', $argument));
+            }
+
             if (str_starts_with($argument, '--duration=')) {
                 $run->duration((int) str_replace('--duration=', '', $argument));
             }
