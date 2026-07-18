@@ -76,7 +76,7 @@ it('correctly sets the post method', function (): void {
 it('correctly sets the headers', function (): void {
     $this->stress->headers(['foo' => 'bar']);
 
-    $class = new \ReflectionClass($this->stress);
+    $class = new ReflectionClass($this->stress);
     $protected = $class->getProperty('headers');
 
     $instance = $this->stress;

@@ -49,7 +49,7 @@ final class Plugin implements HandlesArguments
 
         foreach ($arguments as $argument) {
             if (str_starts_with($argument, '--headers=')) {
-                $run->headers($this->extractPayload('headers', $argument));
+                $run->headers($this->extractHeaders($argument));
             }
 
             if (str_starts_with($argument, '--duration=')) {
@@ -96,6 +96,32 @@ final class Plugin implements HandlesArguments
         }
 
         $run->dd();
+    }
+
+    /**
+     * Extracts the headers from the argument.
+     *
+     * @return array<string, string>
+     */
+    private function extractHeaders(string $argument): array
+    {
+        $headers = [];
+
+        foreach ($this->extractPayload('headers', $argument) as $name => $value) {
+            if (! is_string($value)) {
+                View::render('components.badge', [
+                    'type' => 'ERROR',
+                    'content' => 'Invalid headers payload. Every header value must be a string. '.
+                        'Example: --headers=\'{"Accept": "application/json"}\'',
+                ]);
+
+                exit(0);
+            }
+
+            $headers[$name] = $value;
+        }
+
+        return $headers;
     }
 
     /**

@@ -150,7 +150,6 @@ final readonly class Detail
 
         $requestsTotal = $metrics['http_reqs']['values']['count'];
         $requestsRate = round($metrics['http_reqs']['values']['rate'], 2);
-        $result->testRun()->concurrency();
 
         $this->twoColumnDetail('Requests Count', <<<HTML
             <span class="text-gray mr-1">$requestsRate reqs/s</span>

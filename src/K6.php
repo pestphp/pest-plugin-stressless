@@ -14,7 +14,7 @@ final readonly class K6 implements Stringable
     /**
      * The path to the bin directory.
      */
-    protected const BIN_DIR = __DIR__.'/../bin/';
+    private const BIN_DIR = __DIR__.'/../bin/';
 
     /**
      * The version of k6 to download.
