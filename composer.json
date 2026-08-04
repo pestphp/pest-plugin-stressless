@@ -13,7 +13,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.4",
-        "pestphp/pest": "^5.0.0",
+        "pestphp/pest": "^5.0.3",
         "pestphp/pest-plugin": "^5.0.0",
         "ext-curl": "*",
         "ext-zip": "*"
