@@ -19,7 +19,7 @@ final readonly class K6 implements Stringable
     /**
      * The version of k6 to download.
      */
-    public const K6_VERSION = 'v0.47.0';
+    public const K6_VERSION = 'v2.1.0';
 
     /**
      * The path where the k6 binary is stored relative to the root
